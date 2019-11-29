@@ -1,0 +1,57 @@
+!Xcursor.theme: Simple-and-Soft
+
+Rxvt*background: black
+Rxvt*foreground: #96F996
+!Rxvt*foreground: white
+Rxvt*loginShell: true
+!Rxvt*geometry: 130x50
+Rxvt*scrollstyle: plain
+!URxvt*font: -misc-fixed-medium-r-*-*-18-*-*-*-*-*-*-*
+!URxvt*font: -*-terminus-medium-r-normal-*-14-*-*-*-*-*-*-*
+URxvt*font:  -misc-fixed-medium-r-*-*-18-*-*-*-*-*-*-*,-*-terminesspowerline-medium-*-*-*-18-*-*-*-*-*-*-*
+!URxvt*font: xft:Monospace:size=9
+!URxvt*font: *terminus*medium*-14-*
+Rxvt*scrollBar_right: true
+Rxvt*saveLines: 5000
+Rxvt*scrollTtyOutput: false
+Rxvt*scrollWithBuffer: true
+Rxvt*scrollTtyKeypress: true
+Rxvt*print-pipe: false
+
+Rxvt*color12: #5c5cff
+Rxvt*color13: MediumOrchid
+
+URxvt.perl-ext-common: default,tabbed,selection-to-clipboard,keyboard-select,matcher
+URxvt.url-launcher: /usr/bin/xdg-open
+URxvt.matcher.button: 3
+URxvt.tabbed.tabbar-fg: 252
+URxvt.tabbed.tabbar-bg: 236
+URxvt.tabbed.tab-fg: 252
+URxvt.tabbed.tab-bg: 243
+/*~ URxvt.tabbed.tabcmds.1: N|shell */
+/*~ URxvt.tabbed.tabcmds.2: A|aws|ec2 ssh */
+URxvt.selection.pattern-0: ^(?:\\([^)]*\\)\ )?\[[0-9]+\]\ .*:(.*)$
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keysym.M-s: perl:keyboard-select:search
+
+! Alt-Cursor mappings (these work with vim)
+URxvt.keysym.M-Down:        \033[1;3B
+URxvt.keysym.M-Up:          \033[1;3A
+URxvt.keysym.M-Left:        \033[1;3D
+URxvt.keysym.M-Right:       \033[1;3C
+
+XTerm*font: *terminus*medium*-14-*
+
+! ------------------------------------------------------------------------------
+! ROFI Color theme
+! ------------------------------------------------------------------------------
+rofi.color-enabled: true
+rofi.color-window: #002b37, #002b37, #003642
+rofi.color-normal: #002b37, #819396, #003643, #008ed4, #ffffff
+rofi.color-active: #002b37, #008ed4, #003643, #008ed4, #66c6ff
+rofi.color-urgent: #002b37, #da4281, #003643, #008ed4, #890661
+rofi.fullscreen: false
+rofi.font: mono 24 
+rofi.padding: 10
+rofi.monitor: -4
+rofi.opacity: 90
