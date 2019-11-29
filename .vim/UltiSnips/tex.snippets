@@ -1,0 +1,27 @@
+snippet "@b(egin)?" "begin{} / end{}" br
+\\begin\{$1\}
+	${0:${VISUAL}}
+\\end\{$1\}
+endsnippet
+
+snippet "@i(temize)?" "itemize" br
+\\begin\{itemize\}
+	\item ${0:${VISUAL}}
+\\end\{itemize\}
+endsnippet
+
+snippet "@e(q|quation)?" "begin{equation} / end{equation}" br
+\\begin\{equation\}
+	${0:${VISUAL}}
+\\end\{equation\}
+endsnippet
+
+snippet "@f(rame)?" "beamer frame" br
+\\begin\{frame\}\{$1\}
+	${0:${VISUAL}}
+\\end\{frame\}
+endsnippet
+
+snippet @frac "math fractions"
+\\frac\{$1\}\{$2\}
+endsnippet
