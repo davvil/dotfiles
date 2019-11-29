@@ -1,0 +1,215 @@
+#!/usr/bin/env python
+
+import click
+import os
+import git
+import logging
+import magic
+import re
+import shutil
+import subprocess
+import sys
+
+COMMON_DIR = "common"
+LOCAL_DIR = "local"
+MAGIC_SPLIT_STRING = re.compile(r"-= LOCAL-CONFIG =-")
+
+################################################################################
+# shell completion
+import click_completion
+click_completion.init()
+
+def install_callback(ctx, attr, value):
+    if not value or ctx.resilient_parsing:
+        return value
+    shell, path = click_completion.core.install()
+    click.echo('%s completion installed in %s' % (shell, path))
+    exit(0)
+################################################################################
+
+################################################################################
+# Main function
+
+
+@click.option('--completion', is_flag=True, callback=install_callback, expose_value=False,
+              help="Install completion for the current shell.")
+@click.option('-d', '--dotfiles', help="Path to dotfiles repo.",
+              type=click.Path(), default=os.path.join(os.environ["HOME"], ".dotfiles"))
+@click.group()
+@click.pass_context
+def main(ctx, dotfiles):
+    logging.basicConfig(level=logging.INFO,
+                        format="[%(levelname)s] %(message)s")
+    ctx.obj["dotfiles_dir"] = dotfiles
+
+################################################################################
+
+def get_paths(path, dotfiles_dir):
+    abspath = os.path.abspath(path)
+    path_rel_to_home = os.path.relpath(abspath, os.environ["HOME"])
+    common_path = os.path.join(dotfiles_dir, COMMON_DIR, path_rel_to_home)
+    local_path = os.path.join(dotfiles_dir, LOCAL_DIR, path_rel_to_home)
+
+    return abspath, common_path, local_path
+
+def split_file(fname, dotfiles_dir, git_repo):
+    abspath, common_path, local_path = get_paths(fname, dotfiles_dir)
+    os.makedirs(os.path.dirname(common_path), exist_ok=True)
+    if "text" not in magic.from_file(abspath):
+        logging.info("Detected binary file %s", abspath)
+        shutil.copyfile(abspath, common_path)
+    else:
+        with open(fname) as fp_in:
+            with open(common_path, "w") as fp_common:
+                l = fp_in.readline()
+                while l and not MAGIC_SPLIT_STRING.search(l):
+                    fp_common.write(l)
+                    l = fp_in.readline()
+            if l:
+                os.makedirs(os.path.dirname(local_path), exist_ok=True)
+                with open(local_path, "w") as fp_local:
+                    fp_local.write(l)
+                    for l in fp_in:
+                        fp_local.write(l)
+    git_repo.index.add([os.path.relpath(common_path,
+                                        os.path.join(dotfiles_dir, COMMON_DIR))])
+
+
+@main.command()
+@click.argument('path', type=click.Path())
+@click.option('--ignore', type=click.Path(), multiple=True)
+@click.option('-n', '--dry-run', is_flag=True,
+              help="Just report what would be done, do not perform the operations.")
+@click.pass_context
+def add(ctx, path, ignore, dry_run):
+    def safe_remove(elem, l):
+        try:
+            l.remove(elem)
+        except ValueError:
+            pass
+    dotfiles_dir = ctx.obj["dotfiles_dir"]
+    git_repo = git.Repo(os.path.join(dotfiles_dir, COMMON_DIR))
+    if os.path.isdir(path):
+        logging.info("Adding directory %s", path)
+        for directory, subdirs, files in os.walk(path, topdown=True):
+            for i in ignore:
+                safe_remove(i, files)
+                safe_remove(i, subdirs)
+            for f in files:
+                file_to_add = os.path.join(directory, f)
+                if dry_run:
+                    logging.info("Recusively add %s", file_to_add)
+                else:
+                    split_file(file_to_add, dotfiles_dir, git_repo)
+    else:
+        logging.info("Adding file %s", path)
+        if not dry_run:
+            split_file(path, dotfiles_dir, git_repo)
+
+
+def retrieve_file(path, dotfiles_dir, dry_run):
+    dry_run = True
+    abspath, common_path, local_path = get_paths(path, dotfiles_dir)
+    if not os.path.exists(common_path):
+        logging.info("Copy %s to %s", local_path, abspath)
+        if not dry_run:
+            shutil.copyfile(local_path, abspath)
+    elif not os.path.exists(local_path):
+        logging.info("Copy %s to %s",common_path, abspath)
+        if not dry_run:
+            shutil.copyfile(common_path, abspath)
+    else:
+        logging.info("Concatenate %s and %s to %s", common_path, local_path, abspath)
+        if not dry_run:
+            with open(common_path) as fp_common:
+                for l in fp_common:
+                    fp_common.write(l)
+            with open(local_path) as fp_local:
+                for l in fp_local:
+                    fp_local.write(l)
+
+
+@main.command()
+@click.argument('path', type=click.Path())
+@click.option('-n', '--dry-run', is_flag=True,
+              help="Just report what would be done, do not perform the operations.")
+@click.pass_context
+def retrieve(ctx, path, dry_run):
+    dry_run = True
+    dotfiles_dir = ctx.obj["dotfiles_dir"]
+    abspath, common_path, local_path = get_paths(path, dotfiles_dir)
+    if not os.path.exists(common_path) and not os.path.exists(local_path):
+        logging.error("%s not included in the repository", path)
+        return
+
+    if os.path.isdir(common_path) or os.path.isdir(local_path):
+        files_to_retrieve = set()
+        for repo_path, repo_base_path in \
+                zip([common_path, local_path],
+                    [os.path.join(dotfiles_dir, d) for d in [COMMON_DIR, LOCAL_DIR]]):
+            for directory, _, files in os.walk(repo_path, topdown=True):
+                for f in files:
+                    path_in_repo = os.path.join(directory, f)
+                    if os.path.exists(path_in_repo):
+                        path_rel_to_repo = os.path.relpath(path_in_repo, repo_base_path)
+                        home_path = os.path.join(os.environ["HOME"], path_rel_to_repo)
+                        files_to_retrieve.add(home_path)
+        for f in files_to_retrieve:
+            retrieve_file(f, dotfiles_dir, dry_run)
+    else:
+        # Single file
+        retrieve_file(path, dotfiles_dir, dry_run)
+
+
+@main.command()
+@click.pass_context
+def init(ctx):
+    dotfiles_dir = ctx.obj["dotfiles_dir"]
+    _, common_path, local_path = get_paths("", dotfiles_dir)
+    common_path = os.path.split(common_path)[0]
+    local_path = os.path.split(local_path)[0]
+    if os.path.exists(common_path):
+        logging.error("%s already exists in the filesystem.", common_path)
+        return
+    os.makedirs(common_path, exist_ok=True)
+    os.makedirs(local_path, exist_ok=True)
+    g = git.Git(common_path)
+    g.init()
+    logging.info("Initialized dotfile repo in %s.", dotfiles_dir)
+
+
+def git_simple_command(dotfiles_dir, command):
+    _, common_path, local_path = get_paths("", dotfiles_dir)
+    common_path = os.path.split(common_path)[0]
+    if not os.path.exists(common_path):
+        logging.error("%s does not exist in the filesystem.", common_path)
+        return
+    subprocess.run(["git"] + command.split(), cwd=common_path)
+
+
+@main.command("log")
+@click.pass_context
+def git_log(ctx):
+    git_simple_command(ctx.obj["dotfiles_dir"], "log")
+
+
+@main.command()
+@click.pass_context
+def status(ctx):
+    git_simple_command(ctx.obj["dotfiles_dir"], "status")
+
+
+@main.command()
+@click.pass_context
+def commit(ctx):
+    git_simple_command(ctx.obj["dotfiles_dir"], "commit")
+
+
+@main.command()
+@click.pass_context
+def diff(ctx):
+    git_simple_command(ctx.obj["dotfiles_dir"], "diff --cached")
+
+
+if __name__ == "__main__":
+    main(obj={})
