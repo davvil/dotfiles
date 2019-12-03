@@ -88,6 +88,7 @@ alias bib="bibsearch"
 # Prompt
 case $TERM in
     xterm-*|rxvt*|screen*)
+        # (Re-)define the promptBeginColor in the local part of the config
         promptBeginColor='%{\e[0;36m%}'
         promptEndColor='%{\e[0m%}'
         promptMachine=%m
