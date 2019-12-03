@@ -57,7 +57,7 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
-if [[ $TERM == "xterm-kitty" ]]; then
+if [[ $TERM == "xterm-kitty" ]] && type kitty > /dev/null; then
     # Completion for kitty
     kitty + complete setup zsh | source /dev/stdin
     alias icat="kitty +kitten icat"
@@ -183,35 +183,37 @@ zle -N self-insert url-quote-magic
 
 zmodload zsh/mathfunc
 
-fortune
+type fortune > /dev/null && fortune
 
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-typeset -A ZSH_HIGHLIGHT_STYLES
-ZSH_HIGHLIGHT_STYLES[default]='none'
-ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red,bold'
-ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[alias]='fg=green'
-ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=green'
-ZSH_HIGHLIGHT_STYLES[builtin]='fg=green'
-ZSH_HIGHLIGHT_STYLES[function]='fg=green'
-ZSH_HIGHLIGHT_STYLES[command]='fg=green'
-ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
-ZSH_HIGHLIGHT_STYLES[commandseparator]='none'
-ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
-ZSH_HIGHLIGHT_STYLES[path]='none'
-ZSH_HIGHLIGHT_STYLES[path_prefix]='none'
-ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue'
-ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=blue'
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='none'
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='none'
-ZSH_HIGHLIGHT_STYLES[back-quoted-argument]='none'
-ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=cyan'
-ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=cyan'
-ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=cyan'
-ZSH_HIGHLIGHT_STYLES[assign]='none'
-ZSH_HIGHLIGHT_STYLES[redirection]='none'
-ZSH_HIGHLIGHT_STYLES[comment]='fg=yellow,bold'
+if [[ -e /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    typeset -A ZSH_HIGHLIGHT_STYLES
+    ZSH_HIGHLIGHT_STYLES[default]='none'
+    ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red,bold'
+    ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=yellow'
+    ZSH_HIGHLIGHT_STYLES[alias]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[builtin]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[function]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[command]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[commandseparator]='none'
+    ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[path]='none'
+    ZSH_HIGHLIGHT_STYLES[path_prefix]='none'
+    ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue'
+    ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=blue'
+    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='none'
+    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='none'
+    ZSH_HIGHLIGHT_STYLES[back-quoted-argument]='none'
+    ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=yellow'
+    ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=yellow'
+    ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=yellow'
+    ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=cyan'
+    ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=cyan'
+    ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=cyan'
+    ZSH_HIGHLIGHT_STYLES[assign]='none'
+    ZSH_HIGHLIGHT_STYLES[redirection]='none'
+    ZSH_HIGHLIGHT_STYLES[comment]='fg=yellow,bold'
+fi
  
