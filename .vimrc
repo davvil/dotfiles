@@ -25,7 +25,7 @@ Plug 'Shougo/echodoc.vim'               " Show signature in command line
 Plug 'Yggdroot/indentLine'              " Show indentation lines
 
 " Debugging
-Plug 'vim-vdebug/vdebug'
+"~ Plug 'vim-vdebug/vdebug'
 
 " LaTeX
 Plug 'lervag/vimtex'
@@ -45,7 +45,7 @@ Plug 'drmingdrmer/vim-syntax-markdown'
 " taskwiki
 Plug 'vimwiki/vimwiki'
 Plug 'tbabej/taskwiki'
-Plug 'blindFS/vim-taskwarrior'
+"~ Plug 'blindFS/vim-taskwarrior'
 
 " Notmuch
 Plug 'adborden/vim-notmuch-address'     " Complete addresses with <C-x><C-u>
