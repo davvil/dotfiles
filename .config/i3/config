@@ -1,0 +1,247 @@
+set $mod Mod4
+set $scriptdir ~/.config/i3
+set $cursor2wcenter exec ~/.config/i3/cursor2wcenter.sh
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+font pango:monospace 8
+
+new_window pixel
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+floating_minimum_size 5x5
+
+focus_on_window_activation none
+
+# start a terminal
+bindsym $mod+x exec kitty
+
+# kill focused window
+bindsym $mod+q kill
+
+bindsym $mod+r exec rofi -show run
+
+# change focus
+bindsym $mod+h $cursor2wcenter focus left
+bindsym $mod+j $cursor2wcenter focus down
+bindsym $mod+k $cursor2wcenter focus up
+bindsym $mod+l $cursor2wcenter focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left  $cursor2wcenter focus left
+bindsym $mod+Down  $cursor2wcenter focus down
+bindsym $mod+Up    $cursor2wcenter focus up
+bindsym $mod+Right $cursor2wcenter focus right
+
+# move focused window
+bindsym $mod+Shift+h $cursor2wcenter move left
+bindsym $mod+Shift+j $cursor2wcenter move down
+bindsym $mod+Shift+k $cursor2wcenter move up
+bindsym $mod+Shift+l $cursor2wcenter move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left  $cursor2wcenter move left
+bindsym $mod+Shift+Down  $cursor2wcenter move down
+bindsym $mod+Shift+Up    $cursor2wcenter move up
+bindsym $mod+Shift+Right $cursor2wcenter move right
+
+# split in horizontal orientation
+bindsym $mod+Shift+v split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+bindsym $mod+m exec --no-startup-id $scriptdir/maximize.py
+
+# change container layout (stacked, tabbed, toggle split)
+#bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+t split v, layout tabbed
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# gaps (s for "single window")
+# Big monitor
+bindsym $mod+s gaps horizontal current toggle 800 
+# Laptop monitor
+bindsym $mod+shift+s gaps horizontal current toggle 250
+# Toggle between window gaps
+bindsym $mod+g gaps inner current toggle 10
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+bindsym $mod+d focus child
+
+# switch to workspace
+#workspace web output HDMI-0
+workspace general output eDP1
+
+bindsym F13 exec --no-startup-id "~/.config/i3/gotoWorkspace.py $(~/.config/i3/getWorkspaces.py | rofi -dmenu -auto-select -regex -filter '^' -p 'Change to WS:' -fullscreen -padding 250)"
+bindsym $mod+F13 exec --no-startup-id "~/.config/i3/gotoWorkspace.py $(~/.config/i3/getWorkspaces.py | rofi -dmenu -p 'Create WS:' -fullscreen -padding 250)"
+bindsym Shift+F13 exec --no-startup-id "i3-msg move container to workspace $(~/.config/i3/getWorkspaces.py | rofi -dmenu -auto-select -regex -m -2 -font 'mono 16' -padding 50 -filter '^' -p 'Move to WS:' -fullscreen -padding 250)"
+bindsym Shift+$mod+F13 exec --no-startup-id "i3-msg move container to workspace $(~/.config/i3/getWorkspaces.py | rofi -dmenu -regex -m -2 -font 'mono 16' -padding 50 -p 'Move to new WS:' -fullscreen -padding 250)"
+bindsym Control+F13 exec --no-startup-id kill -s USR1 `cat ~/.config/i3/wsBackAndForth.pid`
+bindsym $mod+o $cursor2wcenter exec $scriptdir/switchWorkspaces.py
+bindsym $mod+i focus output down
+
+# Window jumping with tags (handled automatically via external script)
+bindsym $mod+1 $cursor2wcenter [con_mark="^1$"] focus 
+bindsym $mod+2 $cursor2wcenter [con_mark="^2$"] focus
+bindsym $mod+3 $cursor2wcenter [con_mark="^3$"] focus
+bindsym $mod+4 $cursor2wcenter [con_mark="^4$"] focus
+bindsym $mod+5 $cursor2wcenter [con_mark="^5$"] focus
+bindsym $mod+6 $cursor2wcenter [con_mark="^6$"] focus
+bindsym $mod+7 $cursor2wcenter [con_mark="^7$"] focus
+bindsym $mod+8 $cursor2wcenter [con_mark="^8$"] focus
+bindsym $mod+9 $cursor2wcenter [con_mark="^9$"] focus
+
+# "Master window"
+bindsym $mod+Return exec --no-startup-id $scriptdir/master.py
+bindsym $mod+0 exec --no-startup-id $scriptdir/master.py -f
+
+bindsym $mod+Tab exec --no-startup-id kill -s USR1 `cat ~/.config/i3/alttab.pid`
+# Window list menu
+bindsym Shift+$mod+Tab exec --no-startup-id rofi -show window -window-format "{t} {w} {c}"
+
+# reload the configuration file
+bindsym $mod+Control+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Control+r restart
+
+# exit i3 (logs you out of your X session)
+bindsym $mod+Control+q exit
+
+# Music
+for_window [class="Spotify"] move scratchpad, resize set 1680 900
+bindsym $mod+backslash [class="Spotify"] scratchpad show, move position center
+
+for_window [title="^WhatsApp$"] move scratchpad, resize set 1680 900, mark _whatsapp
+bindsym $mod+Shift+slash [con_mark="^_whatsapp$"] scratchpad show, move position center
+bindsym $mod+Shift+Escape [con_mark="^_whatsapp$"] scratchpad show, move position center
+
+for_window [ title="^pdfpc - present" ] border none floating enable
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym j resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Up resize grow height 10 px or 10 ppt
+        bindsym Down resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+Shift+r mode "resize"
+bindsym $mod+equal resize grow width 10 px or 10 ppt
+bindsym $mod+minus resize shrink width 10 px or 10 ppt
+
+# Music
+bindsym $mod+F9  exec --no-startup-id playerctl play-pause
+bindsym $mod+F10 exec --no-startup-id playerctl pause
+bindsym $mod+F11 exec --no-startup-id playerctl previous
+bindsym $mod+F12 exec --no-startup-id playerctl next
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/bin/volume up
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/bin/volume down
+bindsym XF86AudioMute exec --no-startup-id ~/bin/volume mute # mute sound
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+#~ bar {
+#~   i3bar_command /home/ANT.AMAZON.COM/dvilar/srclocal/i3-4.16/build/i3bar/i3bar
+#~   font pango:monospace, Font Awesome 5 Free Solid 12
+#~   status_command i3blocks -c ~/.config/i3/i3blocks/i3blocks.conf
+#~   position top
+#~   tray_output primary
+#~   separator_symbol ""
+#~   colors {
+#~     separator #444444
+#~     focused_separator #586e75
+#~     background #000000
+#~     statusline #444444
+#~     focused_statusline #aea79f
+#~     focused_workspace #586e75 #586e75 #ffffff
+#~     active_workspace #000000  #000000 #444444
+#~     inactive_workspace #002b36 #002b36 #aea79f
+#~     urgent_workspace #77216f #ff0000 #ffffff
+#~   }
+#~ }
+
+
+for_window [class="XEyes"] floating enable, border none, sticky enable
+no_focus [class="XEyes"]
+
+# class                 border  backgr. text    indicator child_border
+client.focused          #586e75 #8597a6 #fdf6e3 #1e6b00
+client.focused_inactive #073642 #073642 #93a1a1 #002b36
+client.unfocused        #002b36 #002b36 #586e75 #002b36
+client.urgent           #dc322f #dc322f #fdf6e3 #dc322f
+
+# Startup commands
+exec_always --no-startup-id $scriptdir/autotag.py
+exec_always --no-startup-id $scriptdir/alttab.py
+exec_always --no-startup-id $scriptdir/wsBackAndForth.py
+exec_always --no-startup-id ~/.config/polybar/launch.sh
+
+# -= LOCAL SPLIT POINT =-
+ 
+# Local keybindings
+bindsym $mod+End exec ~/bin/i3lock-fancy-multimonitor/lock -b=0x5
+bindsym $mod+Shift+End exec ~/wallpapers/apod-blur.sh random
+bindsym $mod+Delete exec --no-startup-id "setupMonitors.sh $(setupMonitors.sh List | rofi -dmenu -p 'Select screen configuration:')"
+bindsym $mod+Prior exec --no-startup-id setupMonitors.sh Dual
+bindsym $mod+Next exec --no-startup-id setupMonitors.sh Internal
+bindsym $mod+y exec --no-startup-id ~/bin/enableYubikey.sh
+bindsym $mod+bracketleft exec --no-startup-id ~/bin/todaysMeetings gui
+bindsym $mod+bracketright exec --no-startup-id ~/bin/todaysMeetings notify
+bindsym $mod+Home exec ~/bin/run-cisco.sh
+bindsym $mod+n exec --no-startup-id ~/bin/run-ninja.sh
+bindsym $mod+Escape [con_mark="^_chime$"] scratchpad show, move position center
+bindsym $mod+slash [con_mark="^_chime$"] scratchpad show, move position center
+bindsym $mod+grave [con_mark="^_astroid$"] scratchpad show, move position center
+bindsym $mod+Shift+grave [title="astroidCompose"] scratchpad show, move position center
+
+
+# Window specific settings
+for_window [class="Astroid" title="Astroid"] move scratchpad, resize set 1800 950, mark _astroid
+for_window [title="astroid-meeting-info"] floating enable, resize set 1800 950, move position center
+for_window [title="astroidCompose"] move scratchpad, resize set 1800 950, scratchpad show, move position center
+for_window [title="^Amazon Chime$"] move scratchpad, resize set 1680 900, mark _chime
+for_window [title="calendar-gui"] floating enable, resize set 1680 900, move position center
+for_window [class="Cisco AnyConnect Secure Mobility Client"] move scratchpad
+for_window [class="ninja-kitty"] move scratchpad, move position center
+
+assign [class="XEyes"] output eDP1
+for_window [class="XEyes-bigMonitor$"] move container to output up
+
+# Laptop specific startup programms
+exec --no-startup-id nm-applet
+exec --no-startup-id ~/bin/i3eyes.sh
