@@ -345,7 +345,7 @@ let g:ale_linters = { 'python': ['flake8', 'pyls'], }
 let g:ale_echo_msg_format = '[%linter%] %s'
 let g:ale_sign_error = ' ✘'
 let g:ale_sign_warning = ' '
-highlight ALEWarning guibg=None guifg=None gui=underline
+highlight ALEWarning guibg=NONE guifg=NONE gui=underline
 highlight ALEWarningSign guibg=gray10 guifg=yellow
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

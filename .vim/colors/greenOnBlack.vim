@@ -41,7 +41,7 @@ highlight StatusLine   guifg=gray75     guibg=black
 highlight StatusLineNC guifg=#505B67    guibg=black
 highlight Folded       guifg=gray70     guibg=black          gui=bold
 highlight helpNote     guifg=yellow
-highlight htmlItalic   guifg=green                           gui=None
+highlight htmlItalic   guifg=green                           gui=NONE
 highlight shShellVariables guifg=#EEDD82
 highlight MyTagListFileName guifg=white guibg=black          gui=bold
 highlight Title        guifg=gray50     guibg=black          gui=bold
@@ -56,5 +56,5 @@ highlight ALEErrorSign guibg=#840000 guifg=white
 highlight ALEWarningSign   guibg=#848211 guifg=black
 highlight ALEWarning   guifg=red        guibg=gray18         gui=NONE
 highlight IncSearch    guibg=gray20                          gui=NONE
-highlight Todo         guifg=yellow     guibg=None
+highlight Todo         guifg=yellow     guibg=NONE
 highlight CocHighlightText guibg=gray25
