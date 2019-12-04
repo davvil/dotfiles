@@ -128,7 +128,9 @@ set hidden                          " Allow to change buffers even if not saved
 set number                          " Show line numbers...
 set relativenumber                  " ...current line number and offsets
 
-set inccommand=split                " Live preview for substitutions
+if has('nvim')
+    set inccommand=split                " Live preview for substitutions
+endif
 set shortmess+=c                    " No "match x of y" messages for autocompletion
 
 set exrc                            " Allow project specific .vimrc files
