@@ -1,0 +1,80 @@
+#!/home/ANT.AMAZON.COM/dvilar/miniconda3/bin/python
+
+import pulsectl
+import os
+import subprocess
+import sys
+
+from progressbar import progress_bar_str
+
+def print_full_json(icon, volume, muted):
+    #msg = "%s  %d%%" % (icon, volume)
+    full_msg = "%s %s %d%%" % (icon, 
+                             progress_bar_str(float(volume)/100.0, 6), #, "▕", "▏"),
+                             volume)
+    short_msg = "%s %d%%" % (icon, volume)
+    json = '{"full_text": "%s", "short_text": "%s"' % (full_msg, short_msg)
+    #~ if muted:
+    #~     json += ', "color": "#707070"'
+    json += '}'
+    print(json)
+    sys.stdout.flush()
+
+def print_json(icon, volume, muted):
+    full_msg = icon
+    short_msg = icon
+    json = '{"full_text": "%s", "short_text": "%s"' % (full_msg, short_msg)
+    #~ if muted:
+    #~     json += ', "color": "#707070"'
+    json += '}'
+    print(json)
+    sys.stdout.flush()
+
+def dunstify(icon, volume, muted):
+    dunstify_bin = os.path.join(os.environ["HOME"], "bin", "dunstify")
+    if not muted:
+        msg = "%s %s %d%%" % (icon,
+                              progress_bar_str(float(volume)/100.0, 27),
+                              volume)
+    else:
+        msg = "%s Muted (%d%%)" % (icon, volume)
+    subprocess.run([dunstify_bin,
+                    "-t", "1",
+                    "-r", "100",
+                    msg])
+
+def format_volume(sink_list):
+    sink = sink_list[0]
+    muted = (sink.mute != 0)
+    volume = round(sink.volume.values[0] * 100)
+
+    if muted:
+        icon = ""
+    else:
+        if volume > 30:
+            icon = ''
+        elif volume > 0:
+            icon = ''
+        else:
+            icon = ''
+
+    #~ print_json(icon, volume, muted)
+    #~ dunstify(icon, volume, muted)
+    print(icon)
+    sys.stdout.flush()
+
+def main():
+    with pulsectl.Pulse('event-printer') as pulse:
+      def exit_loop(_):
+        raise pulsectl.PulseLoopStop
+
+      format_volume(pulse.sink_list())
+
+      pulse.event_mask_set('sink')
+      pulse.event_callback_set(exit_loop)
+      while True:
+          pulse.event_listen(timeout=None)
+          format_volume(pulse.sink_list())
+
+if __name__ == "__main__":
+    main()

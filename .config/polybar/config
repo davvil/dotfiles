@@ -1,0 +1,225 @@
+;=========================================================
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;==========================================================
+
+[colors]
+background = #550088aa
+background-alt = #586e75
+foreground = #aaaaaa
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+glyph-bg = #000000
+module-bg = #000000
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Dummy bar to reserve space in i3. Doesn't seem to be needed (hopefully)
+
+[bar/reserve]
+width = 1%
+offset-x = 10
+background = #000000ff
+modules-left = dummy
+tray-position = none
+font-0 = monospace:size=12;1
+
+[module/dummy]
+type = custom/text
+content = " "
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Bar definition
+
+[bar/common]
+monitor = ${env:MONITOR}
+width = 100%
+height = 25
+;offset-x = 36 
+;offset-y = 1%
+radius = 0.0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 4
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+padding-left = 3
+padding-right = 0
+
+module-margin-left = 0
+module-margin-right = 0
+
+font-0 = monospace:size=12;1
+font-1 = Font Awesome 5 Free Solid:size=12;1
+font-2 = Inconsolata Nerd Font Mono:size=28;0
+font-3 = monospace bold:size=12;1
+font-4 = Font Awesome 5 Brands:size=12;1
+
+tray-padding = 0
+tray-background = ${colors.module-bg}
+
+;wm-restack = bspwm
+;wm-restack = i3
+override-redirect = false
+
+enable-ipc = true
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Module definition
+
+[module/volume]
+type = custom/script
+exec = ${HOME}/.config/polybar/scripts/volume
+tail = true
+format-background = ${colors.module-bg}
+
+[module/music]
+type = custom/script
+exec = ${HOME}/.config/polybar/scripts/music
+label = "%{F#000000}%{B#550088aa}%{T3}%{T-}%{B#000000}%{F-} %output:0:50:...% %{F#000000}%{B#550088aa}%{T3}%{T-}%{B#000000}%{F-}"
+tail = true
+format-background = ${colors.module-bg}
+
+[module/windowTitleBase]
+type = custom/script
+tail = true
+format-background = ${colors.module-bg}
+label = "%{F#000000}%{B#550088aa}%{T3}%{T-}%{B#000000}%{F-} %output% %{F#000000}%{B#550088aa}%{T3}%{T-}%{B#000000}%{F-}"
+
+[module/windowTitleShort]
+inherit = module/windowTitleBase
+exec = ${HOME}/.config/polybar/scripts/windowTitle 45
+
+[module/windowTitleLong]
+inherit = module/windowTitleBase
+exec = ${HOME}/.config/polybar/scripts/windowTitle 100
+
+[module/clockModule]
+type = custom/script
+interval = 5
+format-background = ${colors.module-bg}
+
+[module/timeShort]
+inherit = module/clockModule
+exec = date '+ %d.%m  %H:%M '
+
+[module/time]
+inherit = module/clockModule
+exec = date '+ %d.%m.%Y  %H:%M '
+
+[module/weather]
+type = custom/script
+exec = ${HOME}/.config/polybar/scripts/weather
+interval = 1800
+format-background = ${colors.module-bg}
+
+[module/runningProgs]
+type = custom/ipc
+hook-0 = ${HOME}/.config/polybar/scripts/runningProgs
+initial = 1
+format-background = ${colors.module-bg}
+
+[module/battery]
+type = custom/script
+exec = ${HOME}/.config/polybar/scripts/battery
+interval = 60
+format-background = ${colors.module-bg}
+
+[module/i3]
+type = internal/i3
+format = <label-state>
+index-sort = true
+wrapping-scroll = false
+pin-workspaces = true
+
+; Only show workspaces on the same output as the bar
+;pin-workspaces = true
+
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
+
+; focused = Active workspace on focused monitor
+label-focused = %name%
+label-focused-background = ${colors.module-bg}
+label-focused-underline = 
+label-focused-padding = 1
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused =
+label-unfocused-padding = 
+
+; visible = Active workspace on unfocused monitor
+label-visible = %name%
+label-visible-background = ${colors.module-bg}
+label-visible-underline = 
+label-visible-padding = 1
+
+; urgent = Workspace with urgency hint set
+label-urgent = %name%
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 1
+
+; Separator in between workspaces
+; label-separator = |
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Formatting modules
+
+[module/spacing]
+type = custom/text
+content-background = ${colors.module-bg}
+content-foreground = ${colors.glyph-bg}
+content = " "
+
+[module/decor-glyph]
+type = custom/text
+content-background = ${colors.background}
+content-foreground = ${colors.glyph-bg}
+
+[module/right-begin]
+inherit = module/decor-glyph
+content = "%{T3}%{T-}"
+
+[module/right-end]
+inherit = module/decor-glyph
+content = "%{T3}%{T-}"
+
+[module/left-begin]
+inherit = module/decor-glyph
+content = "%{T3}%{T-}"
+
+[module/left-end]
+inherit = module/decor-glyph
+content = "%{T3}%{T-}"
+
+[module/xwindow-begin]
+inherit = module/decor-glyph
+content = "%{T3}%{T-}"
+
+[module/xwindow-end]
+inherit = module/decor-glyph
+content = "%{T3}%{T-}"
+
+[settings]
+screenchange-reload = true
+

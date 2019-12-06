@@ -1,0 +1,91 @@
+#!/home/ANT.AMAZON.COM/dvilar/miniconda3/bin/python
+
+import subprocess
+import sys
+
+from progressbar import progress_bar_str
+
+# Icons to choose from
+#   ⚡🔋      
+
+upowerOut = subprocess.run("upower -i /org/freedesktop/UPower/devices/battery_BAT0".split(),
+                           capture_output=True, text=True)
+
+state = perc = time = None
+for l in upowerOut.stdout.split("\n"):
+    fields = [s.strip() for s in l.split(":")]
+    if fields[0] == "state":
+        state = fields[1].strip()
+    elif fields[0] == "percentage":
+        perc = int(fields[1].strip().replace("%", ""))
+    elif fields[0] == "time to empty":
+        time = float(fields[1].split()[0])
+
+if state == "fully-charged":
+    icon = ""
+    #full_text = "%s %d%%" % (icon, perc)
+    full_text = icon
+    short_text = full_text
+    color = None
+elif state == "charging":
+    icon = ""
+    #~ full_text = "%s %s %d%%" % (icon,
+    #~                             progress_bar_str(float(perc)/100.0, 6),
+    #~                             perc)
+    full_text = "%s %d%%" % (icon, perc)
+    short_text = "%s %d%%" % (icon, perc)
+    color = None
+else:
+    static_icon = ""
+    if (perc < 20):
+        icon = ""
+        color = "#FF0000"
+    elif (perc < 40):
+        icon = ""
+        color = "#FFAE00"
+    elif (perc < 60):
+        icon = ""
+        #~ color = "#FFF600"
+        color = None
+    elif (perc < 85):
+        icon = ""
+        #~ color = "#A8FF00"
+        color = None
+    else:
+        icon = ""
+        #~ color = "#A8FF00"
+        color = None
+
+    if time is not None:
+        hours = int(time)
+        min = int((time - hours) * 60)
+        timeStr = " (%d:%02d)" % (hours, min)
+    else:
+        timeStr = ""
+
+    #~ full_text = "{static} {progress} {percent}%{time}".format(
+    #~     progress=progress_bar_str(float(perc)/100.0, 6),
+    #~     batt_icon=icon,
+    #~     static=static_icon,
+    #~     percent=perc,
+    #~     time=timeStr)
+    full_text = "{batt_icon} {percent}%{time}".format(
+        progress=progress_bar_str(float(perc)/100.0, 6),
+        batt_icon=icon,
+        static=static_icon,
+        percent=perc,
+        time=timeStr)
+    short_text = "{batt_icon} {percent}%{time}".format(
+        progress=progress_bar_str(float(perc)/100.0, 6),
+        batt_icon=icon,
+        static=static_icon,
+        percent=perc,
+        time=timeStr)
+
+#~ json = '{"full_text": "%s", "short_text": "%s"' % (full_text, short_text)
+#~ if color is not None:
+#~     json += ', "color": "#707070"'
+#~ json += '}'
+#~ print(json)
+print(full_text + " ")
+sys.stdout.flush()

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+icon=""
+#icon=""
+while true; do
+    if [[ `playerctl status` == "Playing" ]]; then
+        msg=$(echo `playerctl metadata artist` "-" `playerctl metadata title` | sed 's/"/\\"/g')
+        #echo "{\"full_text\": \"$icon $msg\", \"short_text\": \"$icon\"}"
+        echo "%{T2}$icon%{T-} $msg"
+    else
+        echo ""
+        #echo "{\"full_text\": \"\", \"short_text\": \"\"}"
+    fi
+    dbus-monitor "type='signal',sender='org.mpris.MediaPlayer2.spotify'" --profile | head -1 > /dev/null
+done

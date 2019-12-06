@@ -1,0 +1,18 @@
+#!/bin/zsh -f
+
+stateDir=`dirname $0`/runningProgsState
+
+output=""
+for f in $stateDir/*(N); do
+    read icon color < $f
+    output+=" "
+    [[ -n $color ]] && output+="%{F${color}}"
+    output+=$icon
+    [[ -n $color ]] && output+="%{F-}"
+done
+
+if [[ -n $output ]]; then
+    echo "$output "
+else
+    echo ""
+fi

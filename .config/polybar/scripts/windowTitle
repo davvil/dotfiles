@@ -1,0 +1,56 @@
+#!/home/ANT.AMAZON.COM/dvilar/miniconda3/bin/python
+
+import functools
+import i3ipc
+import os
+import sys
+
+
+def printFlush(msg):
+    print(msg)
+    sys.stdout.flush()
+
+
+def getCurrentWindowForMonitor(i3, e, targetMonitor, maxLen=None):
+    focused = i3.get_tree().find_focused()
+    if not focused or not focused.name:
+        printFlush("")
+        return
+
+    if targetMonitor:
+        con = focused
+        while con and con.type != "output":
+            con = con.parent
+        if not con or con.name != targetMonitor:
+            printFlush("")
+            return
+
+    titleString = focused.name
+    if maxLen is not None and len(titleString) > maxLen:
+        titleString = titleString[:maxLen-3] + "..."
+    if focused.marks:
+        displayMarks = [m for m in focused.marks if m[0] != "_"]
+        if displayMarks:
+            titleString += (" [%s]" % ",".join(displayMarks))
+    printFlush(titleString)
+
+
+maxLen = None
+if len(sys.argv) > 1:
+    maxLen = int(sys.argv[1])
+getCurrentWindow = functools.partial(getCurrentWindowForMonitor,
+                                     targetMonitor=os.environ.get("WTMONITOR"),
+                                     maxLen=maxLen)
+
+i3 = i3ipc.Connection()
+
+i3.on("window::new", getCurrentWindow)
+i3.on("window::focus", getCurrentWindow)
+i3.on("window::title", getCurrentWindow)
+i3.on("window::mark", getCurrentWindow)
+i3.on("workspace::focus", getCurrentWindow)
+
+# Show something already at startup
+getCurrentWindow(i3, None)
+
+i3.main()
