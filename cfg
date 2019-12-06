@@ -45,7 +45,16 @@ def main(ctx, dotfiles):
 ################################################################################
 
 def get_paths(path, dotfiles_dir):
-    abspath = os.path.abspath(path)
+    # Not really an "absolute" path, but it should work as if it were. We do
+    # not use abspath() because it breaks if the home directory is a symbolic
+    # link
+    if path and path[0] == "/":
+        abspath = path
+    else:
+        # os.cwd() follows symlinks
+        cwd = subprocess.run("pwd", capture_output=True, shell=True, encoding="utf-8").stdout.strip()
+        abspath = os.path.join(cwd, path)
+    #~abspath = os.path.abspath(path)
     path_rel_to_home = os.path.relpath(abspath, os.environ["HOME"])
     common_path = os.path.join(dotfiles_dir, COMMON_DIR, path_rel_to_home)
     local_path = os.path.join(dotfiles_dir, LOCAL_DIR, path_rel_to_home)
@@ -108,8 +117,8 @@ def add(ctx, path, ignore, dry_run):
 
 
 def retrieve_file(path, dotfiles_dir, dry_run):
-    dry_run = True
     abspath, common_path, local_path = get_paths(path, dotfiles_dir)
+    os.makedirs(os.path.dirname(abspath), exist_ok=True)
     if not os.path.exists(common_path):
         logging.info("Copy %s to %s", local_path, abspath)
         if not dry_run:
@@ -121,12 +130,13 @@ def retrieve_file(path, dotfiles_dir, dry_run):
     else:
         logging.info("Concatenate %s and %s to %s", common_path, local_path, abspath)
         if not dry_run:
-            with open(common_path) as fp_common:
-                for l in fp_common:
-                    fp_common.write(l)
-            with open(local_path) as fp_local:
-                for l in fp_local:
-                    fp_local.write(l)
+            with open(abspath, "w") as fp_out:
+                with open(common_path) as fp_common:
+                    for l in fp_common:
+                        fp_out.write(l)
+                with open(local_path) as fp_local:
+                    for l in fp_local:
+                        fp_out.write(l)
 
 
 @main.command()
@@ -135,7 +145,6 @@ def retrieve_file(path, dotfiles_dir, dry_run):
               help="Just report what would be done, do not perform the operations.")
 @click.pass_context
 def retrieve(ctx, path, dry_run):
-    dry_run = True
     dotfiles_dir = ctx.obj["dotfiles_dir"]
     abspath, common_path, local_path = get_paths(path, dotfiles_dir)
     if not os.path.exists(common_path) and not os.path.exists(local_path):
