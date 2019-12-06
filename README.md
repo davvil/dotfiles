@@ -74,8 +74,10 @@ cfg retrieve .zshrc
 ```
 
 **WARNING:** make sure that you have your local part in synch before
-retrieving, it will overwrite the config file Other git command are also
-supported (call the tool with `--help` to get a list).
+retrieving, it will overwrite the config file.
+
+Other git commands are also supported (call the tool with `--help` to get a
+list).
 
 ## Installation
 
