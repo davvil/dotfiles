@@ -70,7 +70,7 @@ Synchronization across machines happens through normal git merge mechanisms.
 `cfg` supports the `retrieve` command for merging the `common` and `local`
 parts.
 ```bash
-cfg retrieve .zshrc
+$ cfg retrieve .zshrc
 ```
 
 **WARNING:** make sure that you have your local part in synch before
