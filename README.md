@@ -27,15 +27,19 @@ fi
 but this is ugly and not possible with all config files, which can lead to
 synchronization problems.
 
+Also it is not straightforward how to organize the config files into a VCS. You
+probably don't want to make your home directory into a git repo. You can use
+solutions like [stow](https://www.gnu.org/software/stow/), but I did not find
+any that was really comfortable to use.
+
 ## cfg
 
-The [cfg tool](cfg) is my attempt to solve this problem. It is basically a
+The [cfg tool](cfg) is my attempt to solve these problems. It is basically a
 wrapper around git, but before adding files to the repository, it scans them
 for a magic string (`-= LOCAL-CONFIG =-`) that you cleverly inserted
-beforehand.
-
+beforehand. You can interact with the files in their original location, e.g.
 ```bash
-$ cfg add .zshrc
+$ cfg add ~/.zshrc
 ```
 Everything *before* the line containing the magic string gets added
 to a git repository located in `$HOME/.dotfiles/common/`. Everything *after*
