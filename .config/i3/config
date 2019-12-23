@@ -16,6 +16,7 @@ focus_on_window_activation none
 
 # start a terminal
 bindsym $mod+x exec kitty
+#bindsym $mod+x exec urxvt
 
 # kill focused window
 bindsym $mod+q kill
@@ -86,10 +87,10 @@ bindsym $mod+d focus child
 #workspace web output HDMI-0
 workspace general output eDP1
 
-bindsym F13 exec --no-startup-id "~/.config/i3/gotoWorkspace.py $(~/.config/i3/getWorkspaces.py | rofi -dmenu -auto-select -regex -filter '^' -p 'Change to WS:' -fullscreen -padding 250)"
+bindsym F13 exec --no-startup-id "~/.config/i3/gotoWorkspace.py $(~/.config/i3/getWorkspaces.py | rofi -dmenu -auto-select -matching regex -filter '^' -p 'Change to WS:' -fullscreen -padding 250)"
 bindsym $mod+F13 exec --no-startup-id "~/.config/i3/gotoWorkspace.py $(~/.config/i3/getWorkspaces.py | rofi -dmenu -p 'Create WS:' -fullscreen -padding 250)"
-bindsym Shift+F13 exec --no-startup-id "i3-msg move container to workspace $(~/.config/i3/getWorkspaces.py | rofi -dmenu -auto-select -regex -m -2 -font 'mono 16' -padding 50 -filter '^' -p 'Move to WS:' -fullscreen -padding 250)"
-bindsym Shift+$mod+F13 exec --no-startup-id "i3-msg move container to workspace $(~/.config/i3/getWorkspaces.py | rofi -dmenu -regex -m -2 -font 'mono 16' -padding 50 -p 'Move to new WS:' -fullscreen -padding 250)"
+bindsym Shift+F13 exec --no-startup-id "i3-msg move container to workspace $(~/.config/i3/getWorkspaces.py | rofi -dmenu -auto-select -matching regex -m -2 -font 'mono 16' -padding 50 -filter '^' -p 'Move to WS:' -fullscreen -padding 250)"
+bindsym Shift+$mod+F13 exec --no-startup-id "i3-msg move container to workspace $(~/.config/i3/getWorkspaces.py | rofi -dmenu -matching regex -m -2 -font 'mono 16' -padding 50 -p 'Move to new WS:' -fullscreen -padding 250)"
 bindsym Control+F13 exec --no-startup-id kill -s USR1 `cat ~/.config/i3/wsBackAndForth.pid`
 bindsym $mod+o $cursor2wcenter exec $scriptdir/switchWorkspaces.py
 bindsym $mod+i focus output down
@@ -151,10 +152,10 @@ mode "resize" {
         bindsym Right resize grow width 10 px or 10 ppt
 
         # back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+        bindsym Return exec i3barProgNotify --stop resize, mode "default"
+        bindsym Escape exec i3barProgNotify --stop resize, mode "default"
 }
-bindsym $mod+Shift+r mode "resize"
+bindsym $mod+Shift+r exec ~/bin/i3barProgNotify -c '#ff0000' --start resize -i , mode "resize"
 bindsym $mod+equal resize grow width 10 px or 10 ppt
 bindsym $mod+minus resize shrink width 10 px or 10 ppt
 
