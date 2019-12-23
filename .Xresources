@@ -40,18 +40,17 @@ URxvt.keysym.M-Up:          \033[1;3A
 URxvt.keysym.M-Left:        \033[1;3D
 URxvt.keysym.M-Right:       \033[1;3C
 
-XTerm*font: *terminus*medium*-14-*
+XTerm*font:  -misc-fixed-medium-r-*-*-18-*-*-*-*-*-*-*
 
 ! ------------------------------------------------------------------------------
 ! ROFI Color theme
 ! ------------------------------------------------------------------------------
 rofi.color-enabled: true
-rofi.color-window: #002b37, #002b37, #003642
-rofi.color-normal: #002b37, #819396, #003643, #008ed4, #ffffff
-rofi.color-active: #002b37, #008ed4, #003643, #008ed4, #66c6ff
-rofi.color-urgent: #002b37, #da4281, #003643, #008ed4, #890661
+rofi.color-window: #cc002b37, #cc002b37, #cc003642
+rofi.color-normal: #cc002b37, #cc819396, #cc003643, #cc008ed4, #ccffffff
+rofi.color-active: #cc002b37, #cc008ed4, #cc003643, #cc008ed4, #cc66c6ff
+rofi.color-urgent: #cc002b37, #ccda4281, #cc003643, #cc008ed4, #cc890661
 rofi.fullscreen: false
 rofi.font: mono 24 
 rofi.padding: 10
 rofi.monitor: -4
-rofi.opacity: 90
