@@ -1,8 +1,8 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
-import i3
+import i3ipc
 
-workspaceNames = [w["name"] for w in i3.get_workspaces() if w["name"].strip() and w["name"][0] != "_"]
-workspaceNames = list( set(["general", "web"]) | set(workspaceNames) )
-
-print "\n".join(workspaceNames)
+i3 = i3ipc.Connection()
+workspaceNames = set([w.name for w in i3.get_workspaces()])
+workspaceNames = sorted(list(set(["general", "web"]) | set(workspaceNames)))
+print("\n".join(workspaceNames))
