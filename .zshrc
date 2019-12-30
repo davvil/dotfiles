@@ -84,6 +84,10 @@ function kspwd() {
     echo -n $PWD/$1 | xclip -i
 }
 alias bib="bibsearch"
+# okular (or KDE programms in general) write a lot to the terminal
+function okular() {
+    /usr/bin/okular $* 2>/dev/null
+}
 
 # Prompt
 case $TERM in
