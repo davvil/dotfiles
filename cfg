@@ -9,6 +9,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 COMMON_DIR = "common"
 LOCAL_DIR = "local"
@@ -116,21 +117,23 @@ def add(ctx, path, ignore, dry_run):
             split_file(path, dotfiles_dir, git_repo)
 
 
-def retrieve_file(path, dotfiles_dir, dry_run):
+def retrieve_file(path, dotfiles_dir, dry_run, target_path=None):
     abspath, common_path, local_path = get_paths(path, dotfiles_dir)
-    os.makedirs(os.path.dirname(abspath), exist_ok=True)
+    if target_path is None:
+        target_path = abspath
+    os.makedirs(os.path.dirname(target_path), exist_ok=True)
     if not os.path.exists(common_path):
-        logging.info("Copy %s to %s", local_path, abspath)
+        logging.info("Copy %s to %s", local_path, target_path)
         if not dry_run:
-            shutil.copyfile(local_path, abspath)
+            shutil.copyfile(local_path, target_path)
     elif not os.path.exists(local_path):
-        logging.info("Copy %s to %s",common_path, abspath)
+        logging.info("Copy %s to %s",common_path, target_path)
         if not dry_run:
-            shutil.copyfile(common_path, abspath)
+            shutil.copyfile(common_path, target_path)
     else:
-        logging.info("Concatenate %s and %s to %s", common_path, local_path, abspath)
+        logging.info("Concatenate %s and %s to %s", common_path, local_path, target_path)
         if not dry_run:
-            with open(abspath, "w") as fp_out:
+            with open(target_path, "w") as fp_out:
                 with open(common_path) as fp_common:
                     for l in fp_common:
                         fp_out.write(l)
@@ -227,8 +230,20 @@ def push(ctx):
 
 
 @main.command()
+@click.argument('path', type=click.Path())
 @click.pass_context
-def diff(ctx):
+def diff(ctx, path):
+    dotfiles_dir = ctx.obj["dotfiles_dir"]
+    abspath, common_path, local_path = get_paths(path, dotfiles_dir)
+    with tempfile.NamedTemporaryFile() as temp_file:
+        retrieve_file(path, dotfiles_dir, dry_run=False, target_path=temp_file.name)
+        git_diff_cmd = "git diff --no-index %s %s" % (temp_file.name, abspath)
+        subprocess.run(git_diff_cmd.split())
+
+
+@main.command()
+@click.pass_context
+def repo_diff(ctx):
     git_simple_command(ctx.obj["dotfiles_dir"], "diff --cached")
 
 
