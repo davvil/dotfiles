@@ -129,15 +129,15 @@ def retrieve_file(path, dotfiles_dir, dry_run, target_path=None):
         target_path = abspath
     os.makedirs(os.path.dirname(target_path), exist_ok=True)
     if not os.path.exists(common_path):
-        logging.info("Copy %s to %s", local_path, target_path)
+        logging.debug("Copy %s to %s", local_path, target_path)
         if not dry_run:
             shutil.copyfile(local_path, target_path)
     elif not os.path.exists(local_path):
-        logging.info("Copy %s to %s",common_path, target_path)
+        logging.debug("Copy %s to %s",common_path, target_path)
         if not dry_run:
             shutil.copyfile(common_path, target_path)
     else:
-        logging.info("Concatenate %s and %s to %s", common_path, local_path, target_path)
+        logging.debug("Concatenate %s and %s to %s", common_path, local_path, target_path)
         if not dry_run:
             with open(target_path, "w") as fp_out:
                 with open(common_path) as fp_common:
