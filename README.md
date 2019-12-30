@@ -93,7 +93,7 @@ You will need following libraries to be installed (you can pip install all of th
 * click
 * GitPython
 * python-magic
-* click_completion
+* click_completion (optional)
 
 ## Disclaimer
 
