@@ -97,7 +97,7 @@ You will need following libraries to be installed (you can pip install all of th
 
 ## Disclaimer
 
-This tool will overwrite you config file without any warning. Make sure you
+This tool will overwrite you config files without any warning. Make sure you
 know what you are doing when invoking the `retrieve` command. As always,
 backups are your best friends.
 
