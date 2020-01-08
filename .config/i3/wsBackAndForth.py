@@ -2,10 +2,11 @@
 
 import signal
 import os
+from collections import defaultdict
 
 import i3ipc
 
-wsHistory = {}  # Indexed by monitor
+wsHistory = defaultdict(list)  # Indexed by monitor
 i3 = None
 pidFile = os.path.join(os.environ["HOME"], ".config", "i3", "wsBackAndForth.pid")
 
@@ -25,25 +26,28 @@ def focusWorkspaceEvent(my_i3, e):
     if not e.old:
         # Happens at initialization of i3?
         return
-    #~ print(e.old.name, "->", e.current.name)
-    #~ if e.old.name == "__i3_scratch":
     if e.old.name.startswith("_") or e.current.name.startswith("_"):
-        #~ print("Ignored")
         return
     oldWorkspace = actualWorkspace(e.old.name)
     currentWorkspace = actualWorkspace(e.current.name)
+    # Delete the current workspace from the histories
+    for o in wsHistory:
+        try:
+            wsHistory[o].remove(currentWorkspace.name)
+        except ValueError:
+            pass
     # Detect if we just changed the monitor
     if currentWorkspace is None:  # Not sure how this can happen, but it did at least once
         return
-    if oldWorkspace is None:
-        # Can happen if the old workspace is empty and thus has been deleted.
-        # Assume we were in the same output
-        wsHistory[currentWorkspace.output] = e.old.name
     elif oldWorkspace.output != currentWorkspace.output:
         return
+    elif oldWorkspace is None:
+        # Can happen if the old workspace is empty and thus has been deleted.
+        # Assume we were in the same output
+        oldOutput = currentWorkspace.output
     else:
-        wsHistory[oldWorkspace.output] = oldWorkspace.name
-
+        oldOutput = oldWorkspace.output
+    wsHistory[oldOutput].append(oldWorkspace.name)
 
 def backAndForth(signalnum, handler):
     global i3
@@ -52,12 +56,11 @@ def backAndForth(signalnum, handler):
     currentWorkspace = actualWorkspace(i3.get_tree().find_focused().workspace().name)
     if currentWorkspace is None:
         return
-    #~ print("Current:", currentWorkspace.output)
-    target = wsHistory.get(currentWorkspace.output)
-    if target is None:
-        return
-    #~ print("Target:", target)
-    i3.command("workspace %s" % target)
+    try:
+        target = wsHistory[currentWorkspace.output][-1]
+        i3.command("workspace %s" % target)
+    except IndexError:
+        pass
 
 
 def main():
