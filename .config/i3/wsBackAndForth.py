@@ -39,12 +39,12 @@ def focusWorkspaceEvent(my_i3, e):
     # Detect if we just changed the monitor
     if currentWorkspace is None:  # Not sure how this can happen, but it did at least once
         return
-    elif oldWorkspace.output != currentWorkspace.output:
-        return
     elif oldWorkspace is None:
         # Can happen if the old workspace is empty and thus has been deleted.
         # Assume we were in the same output
         oldOutput = currentWorkspace.output
+    elif oldWorkspace.output != currentWorkspace.output:
+        return
     else:
         oldOutput = oldWorkspace.output
     wsHistory[oldOutput].append(oldWorkspace.name)
