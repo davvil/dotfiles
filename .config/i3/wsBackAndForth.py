@@ -36,18 +36,19 @@ def focusWorkspaceEvent(my_i3, e):
             wsHistory[o].remove(currentWorkspace.name)
         except ValueError:
             pass
-    # Detect if we just changed the monitor
-    if currentWorkspace is None:  # Not sure how this can happen, but it did at least once
+
+    if currentWorkspace is None:
+        # Not sure how this can happen, but it did at least once
         return
     elif oldWorkspace is None:
         # Can happen if the old workspace is empty and thus has been deleted.
         # Assume we were in the same output
-        oldOutput = currentWorkspace.output
+        wsHistory[currentWorkspace.output] = e.old.name
     elif oldWorkspace.output != currentWorkspace.output:
+        # Change of monitor, don't do anything
         return
     else:
-        oldOutput = oldWorkspace.output
-    wsHistory[oldOutput].append(oldWorkspace.name)
+        wsHistory[oldWorkspace.output].append(e.old.name)
 
 def backAndForth(signalnum, handler):
     global i3
