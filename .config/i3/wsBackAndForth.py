@@ -6,6 +6,8 @@ from collections import defaultdict
 
 import i3ipc
 
+from gotoWorkspace import gotoWorkspace
+
 wsHistory = defaultdict(list)  # Indexed by monitor
 i3 = None
 pidFile = os.path.join(os.environ["HOME"], ".config", "i3", "wsBackAndForth.pid")
@@ -31,24 +33,32 @@ def focusWorkspaceEvent(my_i3, e):
     oldWorkspace = actualWorkspace(e.old.name)
     currentWorkspace = actualWorkspace(e.current.name)
     # Delete the current workspace from the histories
-    for o in wsHistory:
-        try:
-            wsHistory[o].remove(currentWorkspace.name)
-        except ValueError:
-            pass
+    #~ for o in wsHistory:
+    #~     try:
+    #~         wsHistory[o].remove(currentWorkspace.name)
+    #~     except ValueError:
+    #~         pass
 
-    if currentWorkspace is None:
-        # Not sure how this can happen, but it did at least once
+    if currentWorkspace is None or oldWorkspace is None:
+        # oldWorkspace is None can happen if the old workspace is empty and
+        # thus has been deleted.
+        # Not sure how currentWorkspace can be None, but it did at least once
         return
-    elif oldWorkspace is None:
-        # Can happen if the old workspace is empty and thus has been deleted.
-        # Assume we were in the same output
-        wsHistory[currentWorkspace.output] = e.old.name
     elif oldWorkspace.output != currentWorkspace.output:
         # Change of monitor, don't do anything
         return
     else:
         wsHistory[oldWorkspace.output].append(e.old.name)
+
+
+def emptyWorkspaceEvent(my_i3, e):
+    global wsHistory
+    for o in wsHistory:
+        try:
+            wsHistory[o].remove(e.current.name)
+        except ValueError:
+            pass
+
 
 def backAndForth(signalnum, handler):
     global i3
@@ -58,8 +68,17 @@ def backAndForth(signalnum, handler):
     if currentWorkspace is None:
         return
     try:
-        target = wsHistory[currentWorkspace.output][-1]
-        i3.command("workspace %s" % target)
+        currentTargetIndex = 0
+        while True:
+            currentTargetIndex -= 1
+            target = wsHistory[currentWorkspace.output][currentTargetIndex]
+            targetIsShown = False
+            for o in i3.get_outputs():
+                if o.current_workspace and o.current_workspace == target:
+                    targetIsShown = True
+            if not targetIsShown:
+                break
+        gotoWorkspace(i3, target)
     except IndexError:
         pass
 
@@ -74,6 +93,7 @@ def main():
 
     i3 = i3ipc.Connection()
     i3.on("workspace::focus", focusWorkspaceEvent)
+    i3.on("workspace::empty", emptyWorkspaceEvent)
     signal.signal(signal.SIGUSR1, backAndForth)
 
     i3.main()
