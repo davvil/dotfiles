@@ -21,7 +21,7 @@ bindsym $mod+x exec kitty
 # kill focused window
 bindsym $mod+q kill
 
-bindsym $mod+r exec rofi -show run
+bindsym $mod+r exec "rofi -modi drun,run -show drun -show-icons -lines 5"
 
 # change focus
 bindsym $mod+h $cursor2wcenter focus left
@@ -112,7 +112,7 @@ bindsym $mod+0 exec --no-startup-id $scriptdir/master.py -f
 
 bindsym $mod+Tab exec --no-startup-id kill -s USR1 `cat ~/.config/i3/alttab.pid`
 # Window list menu
-bindsym Shift+$mod+Tab exec --no-startup-id rofi -show window -window-format "{t} {w} {c}"
+bindsym Shift+$mod+Tab exec --no-startup-id rofi -show window -window-format "{t} {w} {c}" -show-icons
 
 # reload the configuration file
 bindsym $mod+Control+c reload
