@@ -171,8 +171,10 @@ bindsym XF86AudioLowerVolume exec --no-startup-id ~/bin/volume down
 bindsym XF86AudioMute exec --no-startup-id ~/bin/volume mute # mute sound
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
+#~ bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
+#~ bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
+bindsym XF86MonBrightnessUp exec ~/bin/brightness.sh inc
+bindsym XF86MonBrightnessDown exec ~/bin/brightness.sh dec
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -212,37 +214,3 @@ exec_always --no-startup-id $scriptdir/alttab.py
 exec_always --no-startup-id $scriptdir/wsBackAndForth.py
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
-# -= LOCAL SPLIT POINT =-
- 
-# Local keybindings
-bindsym $mod+End exec ~/bin/i3lock-fancy-multimonitor/lock -b=0x5
-bindsym $mod+Shift+End exec ~/wallpapers/apod-blur.sh random
-bindsym $mod+Delete exec --no-startup-id "setupMonitors.sh $(setupMonitors.sh List | rofi -dmenu -p 'Select screen configuration:')"
-bindsym $mod+Prior exec --no-startup-id setupMonitors.sh Dual
-bindsym $mod+Next exec --no-startup-id setupMonitors.sh Internal
-bindsym $mod+y exec --no-startup-id ~/bin/enableYubikey.sh
-bindsym $mod+bracketleft exec --no-startup-id ~/bin/todaysMeetings gui
-bindsym $mod+bracketright exec --no-startup-id ~/bin/todaysMeetings notify
-bindsym $mod+Home exec ~/bin/run-cisco.sh
-bindsym $mod+n exec --no-startup-id ~/bin/run-ninja.sh
-bindsym $mod+Escape [con_mark="^_chime$"] scratchpad show, move position center
-bindsym $mod+slash [con_mark="^_chime$"] scratchpad show, move position center
-bindsym $mod+grave [con_mark="^_astroid$"] scratchpad show, move position center
-bindsym $mod+Shift+grave [title="astroidCompose"] scratchpad show, move position center
-
-
-# Window specific settings
-for_window [class="Astroid" title="Astroid"] move scratchpad, resize set 1800 950, mark _astroid
-for_window [title="astroid-meeting-info"] floating enable, resize set 1800 950, move position center
-for_window [title="astroidCompose"] move scratchpad, resize set 1800 950, scratchpad show, move position center
-for_window [title="^Amazon Chime$"] move scratchpad, resize set 1680 900, mark _chime
-for_window [title="calendar-gui"] floating enable, resize set 1680 900, move position center
-for_window [class="Cisco AnyConnect Secure Mobility Client"] move scratchpad
-for_window [class="ninja-kitty"] move scratchpad, move position center
-
-assign [class="XEyes"] output eDP1
-for_window [class="XEyes-bigMonitor$"] move container to output up
-
-# Laptop specific startup programms
-exec --no-startup-id nm-applet
-exec --no-startup-id ~/bin/i3eyes.sh
