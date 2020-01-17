@@ -43,8 +43,8 @@ Plug 'gregsexton/gitv'
 Plug 'drmingdrmer/vim-syntax-markdown'
 
 " taskwiki
-Plug 'vimwiki/vimwiki'
-Plug 'tbabej/taskwiki'
+"~ Plug 'vimwiki/vimwiki'
+"~ Plug 'tbabej/taskwiki'
 "~ Plug 'blindFS/vim-taskwarrior'
 
 " Notmuch
@@ -65,6 +65,9 @@ Plug 'machakann/vim-highlightedyank'    " Show the yank region
 Plug 'vim-scripts/ReplaceWithRegister'  " Activate with gr{motion) (optionally with register)
 
 Plug 'davvil/vim-commentary', { 'branch': 'tilde-comment' } " Changed comments to add ~
+
+" Note taking
+Plug 'fmoralesc/vim-pad', {'branch': 'devel'}
 
 " Candidates for removal
 Plug 'tpope/tpope-vim-abolish'          " Search for variants of words
@@ -501,6 +504,12 @@ let g:UltiSnipsJumpForwardTrigger="<s-tab>"
 "highlight multiple_cursors_cursor term=reverse cterm=reverse gui=reverse
 "highlight link multiple_cursors_visual Visual
 "highlight multiple_cursors_visual guibg=orange
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-pad
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:pad#maps#new = '<leader>nn'
+let g:pad#dir = '~/notes'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim-signjk
