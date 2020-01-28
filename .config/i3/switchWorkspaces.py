@@ -7,7 +7,7 @@ import sys
 
 i3 = i3ipc.Connection()
 
-outputs = [o for o in i3.get_outputs() if o["active"]]
+outputs = [o for o in i3.get_outputs() if o.active]
 if len(outputs) != 2:
     sys.exit(0)
 
