@@ -240,6 +240,8 @@ command! Bd Bdelete
 command! -nargs=1 Match match MatchGroup <q-args>
 " Bind two windows
 command! Bind set scrollbind | set cursorbind
+" Copy current path to selection
+command! Path call setreg("*", expand('%:p:h'))
 
 function! TextWidthToggle()
     if &tw > 0
