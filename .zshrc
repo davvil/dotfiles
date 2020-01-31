@@ -99,7 +99,7 @@ case $TERM in
         precmd () {
             print -Pn "\e]0;$promptMachine: %~\a"; # Set the title
             local pwdSize=$((${COLUMNS} - ${#${(%):-[%j] %m:}} - 1))
-            PROMPT="$(print '\n'$promptBeginColor'[%j] '$promptMachine':%'$pwdSize'<...<%~%<<\n%(!.#.$)'$promptEndColor) "
+            PROMPT="$(print '\n'$promptBeginColor$promptMachine':[%j] %'$pwdSize'<...<%~%<<\n%(!.#.$)'$promptEndColor) "
             # Ensure we have an orange cursor
             echo -n "\e]12;orange\a";
         }
