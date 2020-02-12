@@ -11,6 +11,25 @@ def printFlush(msg):
     sys.stdout.flush()
 
 
+def getConTreeRepresentation(con):
+    titleString = con.name
+    n = con.parent
+    while n.type != "workspace" and len(n.nodes) == 1:
+        if n.layout == "splitv":
+            layoutIndicator = "" # "V"
+        elif n.layout == "splith":
+            layoutIndicator = "" # "H"
+        elif n.layout == "tabbed":
+            layoutIndicator = "" # "T"
+        elif n.layout == "stacked":
+            layoutIndicator = "S"
+        else:
+            layoutIndicator = "" # "U"
+        titleString = "%s %s" % (layoutIndicator, titleString)
+        n = n.parent
+
+    return titleString
+
 def getCurrentWindowForMonitor(i3, e, targetMonitor, maxLen=None):
     focused = i3.get_tree().find_focused()
     if not focused or not focused.name:
@@ -25,7 +44,7 @@ def getCurrentWindowForMonitor(i3, e, targetMonitor, maxLen=None):
             printFlush("")
             return
 
-    titleString = focused.name
+    titleString = getConTreeRepresentation(focused)
     if maxLen is not None and len(titleString) > maxLen:
         titleString = titleString[:maxLen-3] + "..."
     if focused.marks:
