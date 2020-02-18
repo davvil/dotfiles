@@ -13,7 +13,7 @@ def printFlush(msg):
 
 def getConTreeRepresentation(con):
     titleString = con.name
-    if not con.floating:
+    if not con.floating.endswith("on"):
         n = con.parent
         while n.type != "workspace" and len(n.nodes) == 1:
             if n.layout == "splitv":
