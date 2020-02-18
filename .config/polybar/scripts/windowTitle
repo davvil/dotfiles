@@ -13,20 +13,21 @@ def printFlush(msg):
 
 def getConTreeRepresentation(con):
     titleString = con.name
-    n = con.parent
-    while n.type != "workspace" and len(n.nodes) == 1:
-        if n.layout == "splitv":
-            layoutIndicator = "" # "V"
-        elif n.layout == "splith":
-            layoutIndicator = "" # "H"
-        elif n.layout == "tabbed":
-            layoutIndicator = "" # "T"
-        elif n.layout == "stacked":
-            layoutIndicator = "S"
-        else:
-            layoutIndicator = "" # "U"
-        titleString = "%s %s" % (layoutIndicator, titleString)
-        n = n.parent
+    if not con.floating:
+        n = con.parent
+        while n.type != "workspace" and len(n.nodes) == 1:
+            if n.layout == "splitv":
+                layoutIndicator = "" # "V"
+            elif n.layout == "splith":
+                layoutIndicator = "" # "H"
+            elif n.layout == "tabbed":
+                layoutIndicator = "" # "T"
+            elif n.layout == "stacked":
+                layoutIndicator = "S"
+            else:
+                layoutIndicator = "" # "U"
+            titleString = "%s %s" % (layoutIndicator, titleString)
+            n = n.parent
 
     return titleString
 
