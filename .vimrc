@@ -160,7 +160,7 @@ map \ll :VimtexCompileSS<CR>
 map \n :lnext<CR>
 map \p :lprev<CR>
 map \o :TagbarToggle<CR>
-map \r :r! replyToMarkdown.sh<CR>
+map \r :call ReplyToMarkdownQuote()<CR>
 map \h :call ReplyToHTMLQuote()<CR>
 nnoremap Q <nop>
 nnoremap <tab> <C-w>w
@@ -317,6 +317,16 @@ endfu
 "~     endif
 "~ endfunction
 "~ autocmd CursorMoved * call s:HighlightWordUnderCursor()
+
+function! ReplyToMarkdownQuote()
+    " call append(line('.'), ["<blockquote>"] + split(@+, "\n") + ["</blockquote>"])
+    let save_pos = getpos(".")
+    let replyLine = search("On.*wrote:")
+    execute replyLine+1 'delete _'
+    call append(replyLine, systemlist("replyToMarkdown.sh"))
+    call append(replyLine, "")
+    call setpos(".", save_pos)
+endfunction
 
 function! ReplyToHTMLQuote()
     " call append(line('.'), ["<blockquote>"] + split(@+, "\n") + ["</blockquote>"])
@@ -534,7 +544,8 @@ let g:vimtex_quickfix_latexlog = {
       \ 'font' : 0,
       \ 'packages' : {
       \   'hyperref' : 0,
-      \ }
+      \ },
+      \ 'ignore_filters' : ['Marginpar on page'],
       \}
  
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
