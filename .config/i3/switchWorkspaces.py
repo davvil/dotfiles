@@ -2,7 +2,6 @@
 
 import i3ipc
 import os
-import subprocess
 import sys
 
 i3 = i3ipc.Connection()
@@ -27,5 +26,3 @@ for wsName, output in actions:
     i3.command("focus output %s" % output)
     i3.command("workspace %s" % wsName)
 i3.command("focus output %s" % focusedOutput.name)
-
-subprocess.run(os.path.join(os.environ["HOME"], "bin", "i3eyes.sh"))
