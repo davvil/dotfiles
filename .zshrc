@@ -80,8 +80,11 @@ alias vim=nvim
 alias vimwiki="vim +VimwikiIndex"
 alias view="nvim -R '+set noma'"
 alias vimdiff="nvim -d"
+function vim-parallel() {
+    vim "+:autocmd BufRead * set scrollbind | set cursorbind" "+:e $1" "+:rightb vsp $2"
+}
 function kspwd() {
-    echo -n $PWD/$1 | xclip -i
+    print -rDn $PWD/$1 | xclip -i
 }
 alias bib="bibsearch"
 # okular (or KDE programms in general) write a lot to the terminal
