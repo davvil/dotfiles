@@ -1,0 +1,48 @@
+#!/home/ANT.AMAZON.COM/dvilar/miniconda3/bin/python
+
+import os
+import subprocess
+import sys
+import math
+
+"""
+Produce progress bar with ANSI code output.
+https://mike42.me/blog/2018-06-make-better-cli-progress-bars-with-unicode-block-characters
+"""
+def progress_bar_str(progress : float, width : int, begin_symbol = None, end_symbol = None):
+    # 0 <= progress <= 1
+    progress = min(1, max(0, progress))
+    whole_width = math.floor(progress * width)
+    remainder_width = (progress * width) % 1
+    part_width = math.floor(remainder_width * 8)
+    #part_char = [" ", "▏", "▎", "▍", "▌", "▋", "▊", "▉"][part_width]
+    part_char = "▱" if remainder_width < 0.5 else "▰"
+    if (width - whole_width - 1) < 0:
+      part_char = ""
+    #line = "[" + "█" * whole_width + part_char + " " * (width - whole_width - 1) + "]"
+    #line = "█" * whole_width + part_char + " " * (width - whole_width - 1)
+    line = "▰" * whole_width + part_char + "▱" * (width - whole_width - 1)
+    if begin_symbol is not None:
+        line = begin_symbol + line
+    if end_symbol is not None:
+        line += end_symbol
+    return line
+
+
+def dunstify(min_value, max_value, current_value):
+    icon = "/home/ANT.AMAZON.COM/dvilar/.icons/brightness.png"
+    dunstify_bin = os.path.join(os.environ["HOME"], "bin", "dunstify")
+    perc = (current_value - min_value) / (max_value - min_value)
+    msg = "%s %d%%" % (progress_bar_str(perc, 34), int(perc * 100))
+    subprocess.run([dunstify_bin,
+                    "-t", "1000",
+                    "-r", "100",
+                    "-i", icon,
+                    "Brightness", msg])
+
+def main():
+    dunstify(float(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3]))
+
+
+if __name__ == "__main__":
+    main()
