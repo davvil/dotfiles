@@ -1,0 +1,24 @@
+#!/bin/bash
+
+source `dirname $0`/options.bash
+addOption -c --color help="Color for notification"
+addOption --start help="Notify start of application" flagTrue
+addOption --stop  help="Notify stop of application" flagTrue
+addOption -i --icon help="Icon to show"
+parseOptions "$@"
+
+name=${optArgv[0]}
+stateDir=$HOME/.config/polybar/scripts/runningProgsState
+fileDest=$stateDir/$name
+
+if $start; then
+    echo $icon $color > $fileDest
+elif $stop; then
+    if [[ -f $fileDest ]]; then
+        rm $fileDest
+    else
+        echo "NOTE: program does not seem to be active"
+    fi
+fi
+
+polybar-msg hook runningProgs 1
