@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ $# -gt 0 ]]; then
+    echo -n "$@" | xclip -i 
+else
+    xclip -i
+fi
