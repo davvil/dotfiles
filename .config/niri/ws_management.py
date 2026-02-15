@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 import enum
+import json
 import os
 import re
 import subprocess
@@ -77,7 +78,10 @@ def main():
   if selected_ws:
     match args.action:
       case Actions.FOCUS:
+        niri_ws = json.loads(niri_cmd("workspaces").stdout)
+        focused_output = [ws for ws in niri_ws if ws["is_focused"]][0]["output"]
         niri_cmd("action move-workspace-to-index 1")
+        niri_cmd(f"action move-workspace-to-monitor --reference {selected_ws} {focused_output}")
         niri_cmd(f"action focus-workspace {selected_ws}")
         niri_cmd(f"action move-workspace-to-index --reference {selected_ws} 1")
       case Actions.MOVE_WINDOW:
