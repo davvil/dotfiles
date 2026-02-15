@@ -6,6 +6,7 @@ import sys
 import subprocess
 from typing import Any
 
+
 def niri_cmd(command: str):
   process_stats = subprocess.run(
     ["niri", "msg", "--json"] + command.split(),
