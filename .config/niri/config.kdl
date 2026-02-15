@@ -603,4 +603,4 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 }
 
-
+// Machine dependent configuration below this point
