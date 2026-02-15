@@ -1,0 +1,8 @@
+*
+!.gitignore
+
+# Niri
+!.config/
+!.config/niri
+!.config/niri/config.kdl
+!.config/niri/focus_window.py
