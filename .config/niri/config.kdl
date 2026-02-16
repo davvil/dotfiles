@@ -366,6 +366,8 @@ binds {
     Shift+XF86AudioRaiseVolume allow-when-locked=true { spawn "~/bin/spotifyVolume" "up"; }
     Shift+XF86AudioLowerVolume allow-when-locked=true { spawn "~/bin/spotifyVolume" "down"; }
 
+    Mod+Backslash { spawn "~/.config/niri/ns.py" "-m" "-id" "spotify" "-s" "spotify"; }
+
     XF86MonBrightnessDown { spawn "brightnessctl" "s" "4%-"; }
     XF86MonBrightnessUp { spawn "brightnessctl" "s" "4%+"; }
     Shift+XF86Display { spawn "wdisplays"; }

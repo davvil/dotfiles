@@ -7,3 +7,4 @@
 !.config/niri/config.kdl
 !.config/niri/focus_window.py
 !.config/niri/ws_management.py
+!.config/niri/ns.py
