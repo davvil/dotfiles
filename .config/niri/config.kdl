@@ -193,6 +193,11 @@ layout {
         // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
     }
 
+    tab-indicator {
+      active-color "greenyellow"
+      position "top"
+    }
+
     // You can also add a border. It's similar to the focus ring, but always visible.
     border {
         // The settings are the same as for the focus ring.
@@ -395,12 +400,12 @@ binds {
     Mod+Q { close-window; }
 
     Mod+Left  { focus-column-left; }
-    Mod+Down  { focus-window-down; }
-    Mod+Up    { focus-window-up; }
+    Mod+Down  { focus-window-down-or-top; }
+    Mod+Up    { focus-window-up-or-bottom; }
     Mod+Right { focus-column-right; }
     Mod+H     { focus-column-left; }
-    Mod+J     { focus-window-down; }
-    Mod+K     { focus-window-up; }
+    Mod+J     { focus-window-down-or-top; }
+    Mod+K     { focus-window-up-or-bottom; }
     Mod+L     { focus-column-right; }
 
     Mod+Shift+Left  { move-column-left; }
