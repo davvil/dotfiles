@@ -65,6 +65,7 @@ input {
     focus-follows-mouse
 }
 
+workspace "Scratch"
 include "named_workspaces.kdl"
 
 // You can configure outputs by their name, which you can find
@@ -102,6 +103,12 @@ include "named_workspaces.kdl"
     // If the position is unset or results in an overlap, the output is instead placed
     // automatically.
     position x=1280 y=0
+}
+
+gestures {
+  hot-corners {
+    off
+  }
 }
 
 // Settings that influence how windows are positioned and sized.

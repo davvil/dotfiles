@@ -12,7 +12,7 @@ scratch_window = {}
 # the focused workspace data
 focused_workspace = {}
 # the scratchpad workspace name
-scratch_workspace = os.getenv("NS_WORKSPACE", "scratch")
+scratch_workspace = os.getenv("NS_WORKSPACE", "Scratch")
 
 def niri_cmd(cmd_args):
     print(cmd_args)
