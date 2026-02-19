@@ -397,7 +397,7 @@ binds {
     // or do a four-finger swipe up on a touchpad.
     Mod+O repeat=false { toggle-overview; }
 
-    Mod+Q { close-window; }
+    Shift+Mod+Q { close-window; }
 
     Mod+Left  { focus-column-left; }
     Mod+Down  { focus-window-down-or-top; }
@@ -561,7 +561,10 @@ binds {
     // Expel the bottom window from the focused column to the right.
     Mod+Period { expel-window-from-column; }
 
-    Mod+W { switch-preset-column-width; }
+    Mod+Q { set-column-width "33%"; }
+    Mod+W { set-column-width "50%"; }
+    Mod+E { set-column-width "66%"; }
+    // Mod+W { switch-preset-column-width; }
     Mod+Shift+R { switch-preset-window-height; }
     Mod+Ctrl+R { reset-window-height; }
     Mod+F { maximize-column; }
