@@ -637,4 +637,12 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 }
 
+recent-windows {
+  open-delay-ms 300
+  binds {
+    Mod+Tab { next-window scope="workspace"; }
+    Mod+Shift+Tab { previous-window scope="workspace"; }
+  }
+}
+
 // Machine dependent configuration below this point
