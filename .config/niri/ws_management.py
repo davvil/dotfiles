@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 import enum
 import json
+import notify2
 import os
 import re
 import subprocess
@@ -53,6 +54,14 @@ def niri_cmd(command: str):
     print(subp_run.stderr, file=sys.stderr)
   return subp_run
 
+
+def send_message(title, message):
+    notify2.init("NiriWS")
+    notice = notify2.Notification(title, message)
+    notice.show()
+    return
+
+
 def read_workspaces():
   workspaces = []
   with open(WORKSPACES_PATH) as fp:
@@ -64,7 +73,8 @@ def read_workspaces():
   return workspaces
 
 
-def create_ws(new_ws, workspaces):
+def create_ws(new_ws):
+  workspaces = read_workspaces()
   if new_ws in workspaces:
     print(f"Workspace '{new_ws}' already exists. Doing nothing", file=sys.stderr)
     return
@@ -74,7 +84,8 @@ def create_ws(new_ws, workspaces):
     print(f'workspace "{new_ws}"', file=fp)
 
 
-def delete_ws(del_ws, workspaces):
+def delete_ws(del_ws):
+  workspaces = read_workspaces()
   if del_ws not in workspaces:
     print(
         f"Workspace '{del_ws}' does not exist. Doing nothing", file=sys.stderr)
@@ -87,8 +98,6 @@ def delete_ws(del_ws, workspaces):
 
 def focus_ws(selected_ws):
   niri_ws = json.loads(niri_cmd("workspaces").stdout)
-  from pprint import pprint
-  pprint(niri_ws)
   focused_output = [ws for ws in niri_ws if ws["is_focused"]][0]["output"]
   niri_cmd("action move-workspace-to-index 1")
   niri_cmd(f"action move-workspace-to-monitor --reference {selected_ws} {focused_output}")
@@ -102,12 +111,33 @@ class Actions(enum.StrEnum):
   CREATE_WS = "create-workspace"
   DELETE_WS = "delete-workspace"
 
+
 rofi_titles = {
     Actions.FOCUS: " Change to WS:",
-    Actions.MOVE_WINDOW: ' Move window to WS:',
-    Actions.CREATE_WS: ' Create new WS:',
-    Actions.DELETE_WS: ' Delete WS:',
+    Actions.MOVE_WINDOW: " Move window to WS:",
+    Actions.CREATE_WS: " Create new WS:",
+    Actions.DELETE_WS: " Delete WS:",
 }
+
+
+def get_ws(args):
+  if args.workspace:
+    selected_ws = args.workspace
+  else:
+    workspaces = read_workspaces()
+    match args.action:
+      case Actions.FOCUS:
+        selected_ws = run_rofi(rofi_titles[args.action], workspaces)
+      case Actions.MOVE_WINDOW:
+        selected_ws = run_rofi(rofi_titles[args.action], workspaces)
+      case Actions.CREATE_WS:
+        selected_ws = run_rofi(
+            rofi_titles[args.action], workspaces, auto_select=False, filter="")
+      case Actions.DELETE_WS:
+        selected_ws = run_rofi(
+            rofi_titles[args.action], workspaces, auto_select=False)
+  return selected_ws
+
 
 def main():
   argparser = ArgumentParser()
@@ -115,26 +145,24 @@ def main():
       "action",
       choices=Actions,
   )
+  argparser.add_argument(
+      "workspace",
+      nargs="?",
+  )
   args = argparser.parse_args()
 
-  workspaces = read_workspaces()
+  selected_ws = get_ws(args)
   match args.action:
     case Actions.FOCUS:
-      selected_ws = run_rofi(rofi_titles[args.action], workspaces)
       focus_ws(selected_ws)
     case Actions.MOVE_WINDOW:
-      selected_ws = run_rofi(rofi_titles[args.action], workspaces)
       niri_cmd(f"action move-window-to-workspace --focus false {selected_ws}")
     case Actions.CREATE_WS:
-      selected_ws = run_rofi(
-          rofi_titles[args.action], workspaces, auto_select=False, filter="")
-      create_ws(selected_ws, workspaces)
-      time.sleep(0.3)
-      focus_ws(selected_ws)
+      create_ws(selected_ws)
+      send_message("WS Created", f"Created workspace {selected_ws}")
     case Actions.DELETE_WS:
-      selected_ws = run_rofi(
-          rofi_titles[args.action], workspaces, auto_select=False)
-      delete_ws(selected_ws, workspaces)
+      delete_ws(selected_ws)
+      send_message("WS Deleted", f"Deleted workspace {selected_ws}")
 
 if __name__ == "__main__":
   main()
