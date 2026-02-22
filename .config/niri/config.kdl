@@ -369,6 +369,8 @@ binds {
 
     F13 { spawn "~/.config/niri/ws_management.py" "focus"; }
     Shift+F13 { spawn "~/.config/niri/ws_management.py" "move-window"; }
+    Mod+F13 { spawn "~/.config/niri/ws_management.py" "create-workspace"; }
+    Control+Mod+F13 { spawn "~/.config/niri/ws_management.py" "delete-workspace"; }
 
     // Example volume keys mappings for PipeWire & WirePlumber.
     // The allow-when-locked=true property makes them work even when the session is locked.
