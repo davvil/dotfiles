@@ -10,6 +10,8 @@ import subprocess
 import sys
 import time
 
+from ws_icons import get_ws_icon
+
 WORKSPACES_PATH = os.path.join(os.environ["HOME"],
                                ".config/niri/named_workspaces.kdl")
 ROFI = os.path.join(os.environ["HOME"],
@@ -19,6 +21,13 @@ workspace_line_re = re.compile(r'workspace\s+"(.*)"')
 
 
 def run_rofi(title, options, auto_select=True, filter="^"):
+  options_with_icons = []
+  for o in options:
+    icon = get_ws_icon(o)
+    options_with_icons.append(
+        f'{o}\0icon\x1f<span font="Symbols Nerd Font" color="white">{icon}</span>'
+    )
+
   try:
     subp_run = subprocess.run(
         [ROFI,
@@ -34,7 +43,7 @@ def run_rofi(title, options, auto_select=True, filter="^"):
          #"-me-accept-entry", "MousePrimary",
          "-fi -theme-str", "listview { lines: 20; }"
          ],
-        input="\n".join(options),
+        input="\n".join(options_with_icons),
         capture_output=True,
         text=True,
         check=True,
