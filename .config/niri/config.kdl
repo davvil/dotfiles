@@ -563,9 +563,9 @@ binds {
     // Expel the bottom window from the focused column to the right.
     Mod+Period { expel-window-from-column; }
 
-    Mod+Q { set-column-width "33%"; }
+    Mod+Q { set-column-width "32%"; }
     Mod+W { set-column-width "50%"; }
-    Mod+E { set-column-width "66%"; }
+    Mod+E { set-column-width "65%"; }
     // Mod+W { switch-preset-column-width; }
     Mod+Shift+R { switch-preset-window-height; }
     Mod+Ctrl+R { reset-window-height; }
