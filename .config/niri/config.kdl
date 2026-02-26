@@ -285,10 +285,10 @@ prefer-no-csd
 // You can change the path where screenshots are saved.
 // A ~ at the front will be expanded to the home directory.
 // The path is formatted with strftime(3) to give you the screenshot date and time.
-screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+// screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 // You can also set this to null to disable saving screenshots to disk.
-// screenshot-path null
+screenshot-path null
 
 // Animation settings.
 // The wiki explains how to configure individual animations:
@@ -392,6 +392,12 @@ binds {
     XF86MonBrightnessDown { spawn "brightnessctl" "s" "4%-"; }
     XF86MonBrightnessUp { spawn "brightnessctl" "s" "4%+"; }
     Shift+XF86Display { spawn "wdisplays"; }
+    XF86NotificationCenter { screenshot; }
+    Shift+XF86NotificationCenter { screenshot-window; }
+    Control+XF86NotificationCenter { screenshot-screen; }
+    XF86PickupPhone { set-dynamic-cast-window; }
+    Shift+XF86PickupPhone { clear-dynamic-cast-target; }
+    Control+XF86PickupPhone { set-dynamic-cast-monitor; }
 
 
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
@@ -571,11 +577,11 @@ binds {
     Mod+Ctrl+R { reset-window-height; }
     Mod+F { maximize-column; }
     Mod+Shift+F { maximize-window-to-edges; }
-    Mod+Shift+Control+F { fullscreen-window; }
+    Mod+Ctrl+F { toggle-windowed-fullscreen; }
 
     // Expand the focused column to space not taken up by other fully visible columns.
     // Makes the column "fill the rest of the space".
-    Mod+Ctrl+F { expand-column-to-available-width; }
+    // Mod+Ctrl+F { expand-column-to-available-width; }
 
     Mod+C { center-column; }
 
