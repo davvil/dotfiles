@@ -2,6 +2,7 @@
 # Adapted from the many ideas shared at: https://github.com/YaLTeR/niri/discussions/329
 
 import argparse
+from collections import Counter
 import json
 import os
 import subprocess
@@ -13,6 +14,7 @@ scratch_window = {}
 focused_workspace = {}
 # the scratchpad workspace name
 scratch_workspace = os.getenv("NS_WORKSPACE", "Scratch")
+n_ws = Counter()  # Indexed by output
 
 def niri_cmd(cmd_args):
     print(cmd_args)
@@ -25,7 +27,7 @@ def move_window_to_scratchpad(window_id, animations):
 
 def bring_scratchpad_window_to_focus(window_id, args):
     niri_cmd(["move-workspace-to-monitor", "--reference", scratch_workspace, focused_workspace["output"]])
-    #niri_cmd(["move-window-to-workspace", "--window-id", str(window_id), str(focused_workspace["idx"])])
+    niri_cmd(["move-workspace-to-index", "--reference", scratch_workspace, str(n_ws[focused_workspace["output"]]-1)])
     niri_cmd(["move-window-to-workspace", "--window-id", str(window_id), str(focused_workspace["name"])])
     if args.multi_monitor:
         niri_cmd(["move-window-to-monitor", "--id", str(window_id), focused_workspace["output"]])
@@ -52,10 +54,12 @@ def fetch_focused_workspace():
 
     # get the focused workspace
     for workspace in workspaces:
+        n_ws[workspace["output"]] += 1
         if workspace["is_focused"]:
             global focused_workspace
             focused_workspace = workspace
-            return workspace["id"]
+
+    return focused_workspace["id"]
 
 def ns(parser):
     args = parser.parse_args()
