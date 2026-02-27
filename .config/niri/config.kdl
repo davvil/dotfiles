@@ -272,8 +272,18 @@ layout {
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
 spawn-at-startup "waybar"
-spawn-at-startup "swaybg" "-i" "/home/david/wallpapers/erizo.jpg" "-m" "fill"
+spawn-at-startup "~/wallpapers/wpaperd"
 spawn-at-startup "mako"
+
+overview {
+  zoom 0.6
+}
+
+// Put swaybg inside the overview backdrop.
+layer-rule {
+    match namespace="^wallpaper$"
+    place-within-backdrop true
+}
 
 // Uncomment this line to ask the clients to omit their client-side decorations if possible.
 // If the client will specifically ask for CSD, the request will be honored.
