@@ -370,9 +370,9 @@ binds {
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+X hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
-    // Mod+R hotkey-overlay-title="Run an Application: fuzzel" { spawn "zsh" "-c" "fuzzel --prompt 'Run: '"; }
     Mod+R hotkey-overlay-title="Run an Application" { spawn "zsh" "-c" "~/bin/rofi -modes combi -combi-modes drun,run -show combi -show-icons -display-combi 'Run:'"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+    Mod+V { spawn "~/.config/niri/run_and_consume.py"; }
+    Shift+Mod+R hotkey-overlay-title="Run an Application" { spawn "zsh" "-c" "~/.config/niri/run_and_consume.py & ~/bin/rofi -modes combi -combi-modes drun,run -show combi -show-icons -display-combi 'Run:'"; }
 
     // You can also use a shell. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument in the end.
@@ -576,8 +576,8 @@ binds {
     Mod+W { set-column-width "50%"; }
     Mod+E { set-column-width "65%"; }
     // Mod+W { switch-preset-column-width; }
-    Mod+Shift+R { switch-preset-window-height; }
-    Mod+Ctrl+R { reset-window-height; }
+    //Mod+Shift+R { switch-preset-window-height; }
+    //Mod+Ctrl+R { reset-window-height; }
     Mod+F { maximize-column; }
     Mod+Shift+F { maximize-window-to-edges; }
     Mod+Ctrl+F { toggle-windowed-fullscreen; }
