@@ -10,3 +10,5 @@
 !.config/niri/ns.py
 !.config/niri/ws_icons.py
 !.config/niri/run_and_consume.py
+
+# Machine-dependent files below this line
