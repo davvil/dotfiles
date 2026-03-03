@@ -398,7 +398,7 @@ binds {
     Mod+F12 { spawn "playerctl" "next"; }
     Mod+XF86Favorites { spawn "playerctl" "next"; }
 
-    Mod+Backslash { spawn "~/.config/niri/ns.py" "-m" "-id" "spotify" "-s" "spotify"; }
+    Mod+Backslash { spawn "~/.config/niri/ns.py" "-m" "-id" "spotify" "-s" "spotify" "-W" "70%" "-H" "80%"; }
 
     XF86MonBrightnessDown { spawn "brightnessctl" "s" "4%-"; }
     XF86MonBrightnessUp { spawn "brightnessctl" "s" "4%+"; }

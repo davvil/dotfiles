@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 
 # the found scratchpad window (id, workspace_id, is_focused, is_floating)
 scratch_window = {}
@@ -34,6 +35,12 @@ def bring_scratchpad_window_to_focus(window_id, args):
     if args.animations and not scratch_window["is_floating"]:
         niri_cmd(["move-window-to-floating", "--id", str(window_id)])
     niri_cmd(["focus-window", "--id", str(window_id)])
+    if args.width:
+      niri_cmd(["set-window-width", "--id", str(window_id), args.width])
+    if args.height:
+      niri_cmd(["set-window-height", "--id", str(window_id), args.height])
+    time.sleep(0.1)
+    niri_cmd(["center-window", "--id", str(window_id)])
 
 def find_scratch_window(args, windows):
     for window in windows:
@@ -103,6 +110,8 @@ def main():
     parser.add_argument('-s', '--spawn', help='The process name to spawn when non-existing')
     parser.add_argument('-a', '--animations', action='store_true', help='Enable animations')
     parser.add_argument('-m', '--multi-monitor', action='store_true', help='Multi-monitor support')
+    parser.add_argument('-W', '--width', help='Resize window to this width')
+    parser.add_argument('-H', '--height', help='Resize window to this height')
 
     ns(parser)
 
