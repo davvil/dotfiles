@@ -15,7 +15,7 @@ from ws_icons import get_ws_icon
 WORKSPACES_PATH = os.path.join(os.environ["HOME"],
                                ".config/niri/named_workspaces.kdl")
 ROFI = os.path.join(os.environ["HOME"],
-                    "rofi/bin/rofi")
+                    "bin/rofi")
 
 workspace_line_re = re.compile(r'workspace\s+"(.*)"')
 
