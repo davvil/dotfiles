@@ -1,6 +1,10 @@
 *
 !.gitignore
 
+## jj fo config files
+!bin/
+!bin/jjc
+
 # Niri
 !.config/
 !.config/niri
