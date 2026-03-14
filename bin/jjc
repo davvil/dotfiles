@@ -3,7 +3,7 @@
 # jj spcialized for config files
 
 MAIN_BM=main
-LOCAL_BM=laptop
+LOCAL_BM=local
 LOCAL_START_BM=${LOCAL_BM}_start
 
 function move_bookmark() {
