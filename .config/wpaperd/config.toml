@@ -1,0 +1,8 @@
+[default]
+mode="center"
+
+[any]
+path="/home/vilar/wallpapers/satpaper.out/wallpaper.png"
+
+[eDP-1]
+path="/home/vilar/wallpapers/satpaper.out/satpaper_latest.png"

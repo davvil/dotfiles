@@ -17,4 +17,8 @@
 !.config/niri/niri_ipc.py
 !.config/niri/swap_monitors.py
 
+# wpaperd
+!.config/wpaperd/
+!.config/wpaperd/config.toml
+
 # Machine-dependent files below this line
