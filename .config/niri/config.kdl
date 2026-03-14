@@ -391,7 +391,7 @@ binds {
     Shift+XF86AudioRaiseVolume allow-when-locked=true { spawn "~/bin/spotifyVolume" "up"; }
     Shift+XF86AudioLowerVolume allow-when-locked=true { spawn "~/bin/spotifyVolume" "down"; }
 
-    Mod+F9 { spawn "playerctl" "play-pause"; }
+    Mod+F9 allow-when-locked=true { spawn "playerctl" "play-pause"; }
     Mod+XF86NotificationCenter { spawn "playerctl" "play-pause"; }
     Mod+F11 { spawn "playerctl" "previous"; }
     Mod+XF86HangupPhone { spawn "playerctl" "previous"; }
@@ -400,8 +400,8 @@ binds {
 
     Mod+Backslash { spawn "~/.config/niri/ns.py" "-m" "-id" "spotify" "-s" "spotify" "-W" "70%" "-H" "80%"; }
 
-    XF86MonBrightnessDown { spawn "brightnessctl" "s" "4%-"; }
-    XF86MonBrightnessUp { spawn "brightnessctl" "s" "4%+"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "s" "4%-"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "s" "4%+"; }
     Shift+XF86Display { spawn "wdisplays"; }
     XF86NotificationCenter { screenshot; }
     Shift+XF86NotificationCenter { screenshot-window; }

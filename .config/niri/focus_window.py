@@ -41,7 +41,6 @@ def main():
     return
   focused_ws = focused_window[0]["workspace_id"]
   window_list = [w for w in window_list if w["workspace_id"] == focused_ws]
-  print(80*"-")
   window_list.sort(key=functools.cmp_to_key(window_cmp))
   if window_nr >= len(window_list):
     return
