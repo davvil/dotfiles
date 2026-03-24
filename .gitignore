@@ -1,7 +1,7 @@
 *
 !.gitignore
 
-## jj fo config files
+## jj for config files
 !bin/
 !bin/jjc
 
