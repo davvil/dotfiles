@@ -574,9 +574,22 @@ binds {
     // Expel the bottom window from the focused column to the right.
     Mod+Period { expel-window-from-column; }
 
-    Mod+Q { set-column-width "32%"; }
+    Mod+Q { set-column-width "33%"; }
     Mod+W { set-column-width "50%"; }
-    Mod+E { set-column-width "65%"; }
+    Mod+E { set-column-width "66%"; }
+
+    Mod+grave { spawn "~/.config/niri/column_widths.py"; }
+    Shift+Mod+1 { spawn "~/.config/niri/column_widths.py" "1"; }
+    Shift+Mod+2 { spawn "~/.config/niri/column_widths.py" "2"; }
+    Shift+Mod+3 { spawn "~/.config/niri/column_widths.py" "3"; }
+    Shift+Mod+4 { spawn "~/.config/niri/column_widths.py" "4"; }
+    Shift+Mod+5 { spawn "~/.config/niri/column_widths.py" "5"; }
+    Shift+Mod+6 { spawn "~/.config/niri/column_widths.py" "6"; }
+    Shift+Mod+7 { spawn "~/.config/niri/column_widths.py" "7"; }
+    Shift+Mod+8 { spawn "~/.config/niri/column_widths.py" "8"; }
+    Shift+Mod+9 { spawn "~/.config/niri/column_widths.py" "9"; }
+
+
     // Mod+W { switch-preset-column-width; }
     //Mod+Shift+R { switch-preset-window-height; }
     //Mod+Ctrl+R { reset-window-height; }

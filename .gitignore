@@ -16,6 +16,7 @@
 !.config/niri/run_and_consume.py
 !.config/niri/niri_ipc.py
 !.config/niri/swap_monitors.py
+!.config/niri/column_widths.py
 
 # wpaperd
 !.config/wpaperd/
