@@ -89,17 +89,12 @@ def generate_output():
   return output
 
 
-def main():
-  argparser = ArgumentParser()
-  argparser.add_argument("n_columns", type=int, nargs="?")
-  args = argparser.parse_args()
-
+def adjust_columns(n_columns = None):
   focused_ws = [ws for ws in niri_cmd("workspaces")
                 if ws["is_focused"]][0]
   ws_windows = [w for w in niri_cmd("windows")
                 if w["workspace_id"] == focused_ws["id"]]
 
-  n_columns = args.n_columns
   if not n_columns:
     columns = set(
         w["layout"]["pos_in_scrolling_layout"][0]
@@ -109,7 +104,6 @@ def main():
     n_columns = len(columns)
 
   column_width_perc = f"{1 / n_columns * 100:.1f}%"
-  print(column_width_perc)
 
   # set-column-width acts on the focused column, so we'll go through
   # all the columns and resize them
@@ -129,6 +123,12 @@ def main():
   if focused_window:
     niri_cmd(f"action focus-window --id {focused_window["id"]}")
 
+
+def main():
+  argparser = ArgumentParser()
+  argparser.add_argument("n_columns", type=int, nargs="?")
+  args = argparser.parse_args()
+  adjust_columns(args.n_columns)
 
 
 if __name__ == "__main__":
