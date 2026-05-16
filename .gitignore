@@ -22,4 +22,23 @@
 !.config/wpaperd/
 !.config/wpaperd/config.toml
 
+# i3
+!.config/i3
+!.config/i3/cursor2wcenter.sh
+!.config/i3/wsBackAndForth.py
+!.config/i3/master.py
+!.config/i3/alttab.py
+
+
+# sway
+!.config/sway
+!.config/sway/wsManagement.sh
+!.config/sway/goto_windowN.py
+
+# scroll
+!.config/scroll
+!.config/scroll/config
+!.config/scroll/scripts
+!.config/scroll/scripts/auto_fit.lua
+
 # Machine-dependent files below this line

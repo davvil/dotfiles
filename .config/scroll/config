@@ -1,0 +1,250 @@
+# "Hardware configuration"
+input "type:keyboard" {
+  xkb_layout us-dvt
+  xkb_numlock enabled
+}
+input "type:touchpad" tap enabled
+input "6134:2309:Unicomp__Endura_Pro_Keyboard__Mouse" {
+  middle_emulation enabled
+  scroll_method on_button_down
+  scroll_button button3
+}
+
+for_window [app_id="google-chrome"] inhibit_idle fullscreen
+
+set $mod Mod4
+set $scriptdir ~/.config/i3
+set $swayscriptdir ~/.config/sway
+set $term kitty
+set $termexec kitty
+set $c2wc ~/.config/i3/cursor2wcenter.sh
+
+mouse_warping container
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+font pango:Verdana Bold 10
+
+default_border pixel 6
+default_decoration border_radius 12 shadow true shadow_size 4 shadow_blur 25 shadow_offset 15 15
+gaps inner 5
+show_marks no
+
+animations {
+  default true 150
+}
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+floating_minimum_size 5 x 5
+
+cycle_size_wrap true
+
+# "Workaround" to get chrome's tab list working
+focus_on_window_activation focus
+
+# start a terminal
+bindsym $mod+x exec $term
+
+# kill focused window
+bindsym $mod+q kill
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+bindsym --whole-window $mod+button4 focus right  # Scroll up
+bindsym --whole-window $mod+button5 focus left   # Scroll down
+
+bindgesture swipe:left focus left
+bindgesture swipe:right focus right
+bindgesture swipe:up focus up
+bindgesture swipe:down focus down
+
+# move focused window
+bindsym $mod+Control+Left move left
+bindsym $mod+Control+Down move down
+bindsym $mod+Control+Up move up
+bindsym $mod+Control+Right move right
+bindsym $mod+Control+h move left
+bindsym $mod+Control+j move down
+bindsym $mod+Control+k move up
+bindsym $mod+Control+l move right
+
+bindsym $mod+Shift+h move left nomode; exec scrollmsg fit_size v all equal
+bindsym $mod+Shift+j move down nomode
+bindsym $mod+Shift+k move up nomode
+bindsym $mod+Shift+l move right nomode; exec scrollmsg fit_size v all equal
+bindsym $mod+Shift+Left  move left nomode; exec scrollmsg fit_size v all equal
+bindsym $mod+Shift+Down  move down nomode
+bindsym $mod+Shift+Up    move up nomode
+bindsym $mod+Shift+Right move right nomode; exec scrollmsg fit_size v all equal
+
+# split in vertical/horizontal orientation
+bindsym $mod+v lua .config/scroll/scripts/auto_fit.lua set_mode t
+bindsym $mod+Shift+v lua .config/scroll/scripts/auto_fit.lua toggle
+
+# maximize
+bindsym $mod+f toggle_size this 1.0 1.0
+bindsym $mod+Shift+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+w cycle_size h next
+bindsym $mod+Shift+w cycle_size h prev
+bindsym $mod+c align center
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# toggle tiling / floating
+# We add the additional border pixel 6 command for chrome windows
+bindsym $mod+Shift+space floating toggle, border pixel 6
+bindsym $mod+Control+space sticky toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+bindsym F13 exec --no-startup-id $swayscriptdir/wsManagement.sh goto
+bindsym $mod+F13 exec --no-startup-id $swayscriptdir/wsManagement.sh create
+bindsym Shift+F13 exec --no-startup-id $swayscriptdir/wsManagement.sh move
+bindsym Shift+$mod+F13 exec --no-startup-id $swayscriptdir/wsManagement.sh moveNew
+bindsym Control+F13 exec --no-startup-id kill -s USR1 `cat ~/.config/i3/wsBackAndForth.pid`
+bindsym $mod+Backspace exec --no-startup-id kill -s USR1 `cat ~/.config/i3/wsBackAndForth.pid`
+bindsym $mod+grave exec --no-startup-id kill -s USR1 `cat ~/.config/i3/wsBackAndForth.pid`
+
+# Window jumping with tags (handled automatically via external script)
+bindsym $mod+1 exec --no-startup-id $swayscriptdir/goto_windowN.py 1
+bindsym $mod+2 exec --no-startup-id $swayscriptdir/goto_windowN.py 2
+bindsym $mod+3 exec --no-startup-id $swayscriptdir/goto_windowN.py 3
+bindsym $mod+4 exec --no-startup-id $swayscriptdir/goto_windowN.py 4
+bindsym $mod+5 exec --no-startup-id $swayscriptdir/goto_windowN.py 5
+bindsym $mod+6 exec --no-startup-id $swayscriptdir/goto_windowN.py 6
+bindsym $mod+7 exec --no-startup-id $swayscriptdir/goto_windowN.py 7
+bindsym $mod+8 exec --no-startup-id $swayscriptdir/goto_windowN.py 8
+bindsym $mod+9 exec --no-startup-id $swayscriptdir/goto_windowN.py 9
+
+# And swapping
+bindsym $mod+Shift+1 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 1
+bindsym $mod+Shift+2 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 2
+bindsym $mod+Shift+3 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 3
+bindsym $mod+Shift+4 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 4
+bindsym $mod+Shift+5 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 5
+bindsym $mod+Shift+6 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 6
+bindsym $mod+Shift+7 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 7
+bindsym $mod+Shift+8 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 8
+bindsym $mod+Shift+9 exec --no-startup-id $swayscriptdir/goto_windowN.py --swap 9
+
+# "Master window"
+bindsym $mod+Shift+Return exec --no-startup-id $scriptdir/master.py
+bindsym $mod+0 exec --no-startup-id $scriptdir/master.py -f
+
+bindsym $mod+Tab exec --no-startup-id kill -s USR1 `cat ~/.config/i3/alttab.pid`
+bindsym $mod+Shift+Tab jump criteria [app_id="google-chrome"]
+
+# reload the configuration file
+bindsym $mod+Control+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Control+r restart
+
+# exit i3 (logs you out of your X session)
+bindsym $mod+Control+q exit
+
+for_window [class="Spotify"] floating enable, move scratchpad, scratchpad show, move position center, resize set 75ppt 75ppt
+bindsym $mod+backslash [class="Spotify"] scratchpad show, resize set 75ppt 75ppt, move position center
+
+# We shouldn't need this, but whatever reason waybar keeps crashing
+bindsym $mod+b exec waybar
+
+for_window [title="^pdfpc - present"] border none floating enable
+
+for_window [class="[Cc]innamon-settings"] floating enable
+for_window [class="[Bb]lueman-manager"] floating enable
+
+for_window [title="meet.google.com is sharing a window."] floating enable
+for_window [title="Google Meet"] move to workspace Meet
+
+for_window [class="JugglingLab"] floating enable
+
+for_window [app_id=".*wl_mirror"] fullscreen enable
+for_window [app_id="ssh-askpass"] border none
+
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym j resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Up resize grow height 10 px or 10 ppt
+        bindsym Down resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return exec i3barProgNotify --stop resize, mode "default"
+        bindsym Escape exec i3barProgNotify --stop resize, mode "default"
+}
+# Disable mouse resize
+bindsym --border button1 nop
+bindsym $mod+Shift+r exec ~/bin/i3barProgNotify -c '#ff0000' --start resize -i , mode "resize"
+bindsym $mod+equal fit_size h all equal
+bindsym $mod+minus fit_size v all equal
+bindsym $mod+Shift+minus set_size v 0.98
+#bindsym $mod+Shift+minus fit_size v active equal
+
+# Music
+bindsym --locked $mod+F9  exec --no-startup-id playerctl play-pause
+bindsym --locked $mod+XF86NotificationCenter  exec --no-startup-id playerctl play-pause
+bindsym $mod+F11 exec --no-startup-id playerctl previous
+bindsym $mod+XF86HangupPhone exec --no-startup-id playerctl previous
+bindsym $mod+F12 exec --no-startup-id playerctl next
+bindsym $mod+XF86Favorites exec --no-startup-id playerctl next
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym shift+XF86AudioRaiseVolume exec $HOME/bin/spotifyVolume up
+bindsym shift+XF86AudioLowerVolume exec $HOME/bin/spotifyVolume down
+
+for_window [class="XEyes"] floating enable, border none, sticky enable
+no_focus [class="XEyes"]
+
+# class                 border    backgr.   text    indicator child_border
+#client.focused          #00cc0088 #00cc0088 #fdf6e3 #ccffcc88 #00cc0088
+#client.focused          #7fc8ff #7fc8ff #333333 #416580
+client.focused          #7fc8ff #7fc8ff #333333 #7fc8ff
+client.focused_inactive #00559900 #00559988 #aaaaaa #002b36 #00559900
+client.unfocused        #00559900 #00559988 #aaaaaa #002b36 #00559900
+#client.focused_inactive #00559988 #00559988 #aaaaaa #002b36 #00559988
+#client.unfocused        #00559988 #00559988 #aaaaaa #002b36 #00559988
+client.urgent           #dc322f   #dc322f   #fdf6e3 #dc322f
+
+
+# Startup commands
+exec_always gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+exec_always gsettings set org.gnome.desktop.interface icon-theme 'ubuntu-mono-dark-gnome-wise'
+exec $scriptdir/alttab.py
+exec $scriptdir/wsBackAndForth.py
+exec --no-startup-id mako
+
+# Lua scripts
+lua .config/scroll/scripts/auto_fit.lua
+# lua .config/scroll/scripts/adaptive_gaps.lua
+
+bar {
+   scrollbar_command waybar
+}
