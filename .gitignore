@@ -41,4 +41,8 @@
 !.config/scroll/scripts
 !.config/scroll/scripts/auto_fit.lua
 
+# waybar
+!.config/waybar
+!.config/waybar/scroll_tiling.py
+
 # Machine-dependent files below this line
