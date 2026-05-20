@@ -10,6 +10,8 @@ input "6134:2309:Unicomp__Endura_Pro_Keyboard__Mouse" {
   scroll_button button3
 }
 
+focus_follows_mouse full
+
 for_window [app_id="google-chrome"] inhibit_idle fullscreen
 
 set $mod Mod4
@@ -61,11 +63,6 @@ bindsym $mod+Right focus right
 bindsym --whole-window $mod+button4 focus right  # Scroll up
 bindsym --whole-window $mod+button5 focus left   # Scroll down
 
-bindgesture swipe:left focus left
-bindgesture swipe:right focus right
-bindgesture swipe:up focus up
-bindgesture swipe:down focus down
-
 # move focused window
 bindsym $mod+Control+Left move left
 bindsym $mod+Control+Down move down
@@ -94,6 +91,7 @@ bindsym $mod+f toggle_size this 1.0 1.0
 bindsym $mod+Shift+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
+layout_widths [0.33333333  0.5  0.66666667 0.98]
 bindsym $mod+w cycle_size h next
 bindsym $mod+Shift+w cycle_size h prev
 bindsym $mod+c align center
@@ -219,6 +217,11 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym shift+XF86AudioRaiseVolume exec $HOME/bin/spotifyVolume up
 bindsym shift+XF86AudioLowerVolume exec $HOME/bin/spotifyVolume down
+
+workspace_next_on_output_create_empty false
+bindgesture swipe:up lua .config/scroll/scripts/ws_prevnext.lua prev_on_output
+bindgesture swipe:down lua .config/scroll/scripts/ws_prevnext.lua next_on_output
+bindgesture swipe:4:up jump workspaces
 
 for_window [class="XEyes"] floating enable, border none, sticky enable
 no_focus [class="XEyes"]
