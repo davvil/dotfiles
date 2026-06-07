@@ -36,6 +36,7 @@
 !.config/sway/goto_windowN.py
 !.config/sway/gotoWorkspace.py
 !.config/sway/getWorkspaces-icons.py
+!.config/sway/ws_icons.py
 
 # scroll
 !.config/scroll
